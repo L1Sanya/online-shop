@@ -70,4 +70,7 @@ if ($validationError === false)
 {
     $stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
     $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
+    $stmt = $pdo->query("SELECT * FROM users ORDER BY id DESC LIMIT 1");
+    $data = $stmt->fetchAll();
+    print_r($data);
 }
