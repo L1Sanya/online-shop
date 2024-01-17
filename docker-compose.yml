@@ -1,0 +1,32 @@
+version: '3'
+services:
+  php:
+    build:
+      context: docker/php
+    volumes:
+      - '.:/var/www/html'
+    depends_on:
+      - database
+
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - '.:/var/www/html'
+      - './docker/nginx/conf.d:/etc/nginx/conf.d'
+    depends_on:
+      - php
+
+  database:
+    image: postgres:14.10
+    ports:
+      - 5433:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=2612
+      - POSTGRES_USER=alex
+      - POSTGRES_DB=testdb
