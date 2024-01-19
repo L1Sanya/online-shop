@@ -1,76 +1,122 @@
 <?php
-$pdo = new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
 
+$errors = [];
 
-$validationError = false;
-
-
-if (isset($_POST['name']))
-{
+if (isset($_POST['name'])) {
     $name = $_POST['name'];
+    if (empty($name)) {
+        $errors['name'] = "Please, complete this field";
+    }
+    if (strlen($name) < 2) {
+        $errors['name'] = "Name length can't be < 2";
+    }
+} else {
+    $errors['name'] = 'EMPTY FIELD';
 }
 
-if (empty($name))
-{
-    echo 'Имя должно быть заполнено';
-    $validationError = true;
-}
-
-if (strlen($name) < 2)
-{
-    echo 'Имя должно быть больше 2 символов';
-    $validationError = true;
-}
-
-
-if (isset($_POST['email']))
-{
+if (isset($_POST['email'])) {
     $email = $_POST['email'];
+    if (empty($email)) {
+        $errors['email'] = "Please, complete this field";
+    }
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+        $errors['email'] = 'Email is not corrected';
+    }
+} else {
+    $errors['email'] = 'EMPTY FIELD';
 }
 
-if (empty($email))
-{
-    echo 'email должно быть заполнено';
-    $validationError = true;
-}
-
-if (filter_var($email, FILTER_VALIDATE_EMAIL) === false)
-{
-    echo 'Email указан не правильно';
-    $validationError = true;
-}
-
-
-if (isset($_POST['psw']))
-{
+if (isset($_POST['psw'])) {
     $password = $_POST['psw'];
+    if (empty($password)) {
+        $errors['psw'] = 'Please, complete this field';
+    }
+    if (strlen($password) < 7) {
+        $errors['psw'] = 'Password length can not be < 8';
+    }
+}else {
+    $errors['psw'] = 'EMPTY FIELD';
 }
 
-if (empty($password))
-{
-    echo 'Пароль должен быть заполнен';
-    $validationError = true;
+if (isset($_POST['psw-repeat'])) {
+    $passwordRepeat = $_POST['psw-repeat'];
+    if (empty($passwordRepeat)) {
+        $errors['psw-repeat'] = 'Please, complete this field';
+    }
+    if ($password !== $passwordRepeat) {
+        $errors['psw-repeat'] = 'Passwords not similar';
+    }
+} else {
+    $errors['psw-repeat'] = 'EMPTY FIELD';
 }
 
-if (strlen($password) < 7)
+if (empty($errors))
 {
-    echo 'Пароль должен быть длинной не менее 8 символов';
-    $validationError = true;
-}
+    $pdo = new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
 
-$passwordRepeat = $_POST['psw-repeat'];
-
-if ($password !== $passwordRepeat)
-{
-    echo 'Пароль не совпадает';
-    $validationError = true;
-}
-
-if ($validationError === false)
-{
     $stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
     $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
-    $stmt = $pdo->query("SELECT * FROM users ORDER BY id DESC LIMIT 1");
-    $data = $stmt->fetchAll();
-    print_r($data);
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->execute(['email' => $email]);
+
+    print_r("Hello {$name}");
+}
+
+include_once './get_registrate.php';
+
+
+
+
+
+
+class UserSignIn
+{
+    private string $name;
+    private string $email;
+    private string $password;
+    private string $passwordRepeat;
+
+    public function __construct(string $name, string $email, string $password, string $passwordRepeat)
+    {
+        $this->name = $name;
+        $this->email = $email;
+        $this->password = $password;
+        $this->passwordRepeat = $passwordRepeat;
+
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+    public function getPasswordRepeat(): string
+    {
+        return $this->passwordRepeat;
+    }
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+    public function setPasswordRepeat(string $passwordRepeat): void
+    {
+        $this->passwordRepeat = $passwordRepeat;
+    }
+
 }
