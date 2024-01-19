@@ -52,6 +52,7 @@ if (isset($_POST['psw-repeat'])) {
 
 if (empty($errors))
 {
+    require_once './reg_succes.php';
     $pdo = new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
 
     $stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
@@ -60,9 +61,9 @@ if (empty($errors))
     $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
 
-    print_r("Hello {$name}");
+    print_r("\n Hello, {$name}");
 } else {
-    include_once './get_registrate.php';
+    require_once './get_registrate.php';
 }
 
 
