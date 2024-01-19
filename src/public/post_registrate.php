@@ -61,13 +61,9 @@ if (empty($errors))
     $stmt->execute(['email' => $email]);
 
     print_r("Hello {$name}");
+} else {
+    include_once './get_registrate.php';
 }
-
-include_once './get_registrate.php';
-
-
-
-
 
 
 class UserSignIn
