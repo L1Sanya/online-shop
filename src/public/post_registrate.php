@@ -1,85 +1,24 @@
 <?php
+require __DIR__ . '/src/helpers.php';
 
-$errors = [];
+$input = new Input(
+             $_POST['name'],
+             $_POST['email'],
+             $_POST['psw'],
+             $_POST['psw-repeat']
+);
 
-if (isset($_POST['name'])) {
-    $name = $_POST['name'];
-    if (empty($name)) {
-        $errors['name'] = "Please, complete this field";
-    }
-    if (strlen($name) < 2) {
-        $errors['name'] = "Name length can't be < 2";
-    }
-} else {
-    $errors['name'] = 'EMPTY FIELD';
-}
-
-if (isset($_POST['email'])) {
-    $email = $_POST['email'];
-    if (empty($email)) {
-        $errors['email'] = "Please, complete this field";
-    }
-    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-        $errors['email'] = 'Email is not corrected';
-    }
-} else {
-    $errors['email'] = 'EMPTY FIELD';
-}
-
-if (isset($_POST['psw'])) {
-    $password = $_POST['psw'];
-    if (empty($password)) {
-        $errors['psw'] = 'Please, complete this field';
-    }
-    if (strlen($password) < 7) {
-        $errors['psw'] = 'Password length can not be < 8';
-    }
-}else {
-    $errors['psw'] = 'EMPTY FIELD';
-}
-
-if (isset($_POST['psw-repeat'])) {
-    $passwordRepeat = $_POST['psw-repeat'];
-    if (empty($passwordRepeat)) {
-        $errors['psw-repeat'] = 'Please, complete this field';
-    }
-    if ($password !== $passwordRepeat) {
-        $errors['psw-repeat'] = 'Passwords not similar';
-    }
-} else {
-    $errors['psw-repeat'] = 'EMPTY FIELD';
-}
-
-function redirect(string $path)
-{
-    header("Location: $path");
-    die();
-}
-
-if (empty($errors))
-{
-    require_once './reg_succes.php';
-    $pdo = new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
-
-    $stmt = $pdo->prepare('INSERT INTO users (name, email, password) VALUES (:name, :email, :password)');
-    $stmt->execute(['name' => $name, 'email' => $email, 'password' => $password]);
-
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-    $stmt->execute(['email' => $email]);
-
-    print_r("\n Hello, {$name}");
-} else {
-    redirect("https://vk.com/l1sanya");
-    require_once './get_registrate.php';
-}
+DatabaseHandler::addUser($input);
 
 
-class UserSignIn
+class Input
 {
     private string $name;
     private string $email;
     private string $password;
     private string $passwordRepeat;
+
+    private array $errors;
 
     public function __construct(string $name, string $email, string $password, string $passwordRepeat)
     {
@@ -87,40 +26,118 @@ class UserSignIn
         $this->email = $email;
         $this->password = $password;
         $this->passwordRepeat = $passwordRepeat;
+        $this->errors = [];
 
+    }
+
+    public function validate(): void
+    {
+        require_once __DIR__ . '/src/helpers.php';
+
+        if (isset($this->name)) {
+
+            if (empty($this->name)) {
+                $this->errors['name'] = "Please, complete this field";
+            }
+            if (strlen($this->name) < 2) {
+                $this->errors['name'] = "Name length can't be < 2";
+            }
+            if (!checkName($this->name)) {
+                $this->errors['name'] = 'Illegal characters';
+            }
+        } else {
+            $this->errors['name'] = 'EMPTY FIELD';
+        }
+
+        if (isset($this->email)) {
+
+            if (empty($this->email)) {
+                $this->errors['email'] = "Please, complete this field";
+            }
+            if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
+                $this->errors['email'] = 'Invalid email';
+            }
+        } else {
+            $this->errors['email'] = 'EMPTY FIELD';
+        }
+
+        if (isset($this->password)) {
+
+            if (empty($this->password)) {
+                $this->errors['psw'] = 'Please, complete this field';
+            }
+            if (strlen($this->password) < 7) {
+                $this->errors['psw'] = 'Password length can not be < 8';
+            }
+        }else {
+            $this->errors['psw'] = 'EMPTY FIELD';
+        }
+
+        if (isset($this->passwordRepeat)) {
+
+            if (empty($this->passwordRepeat)) {
+                $this->errors['psw-repeat'] = 'Please, complete this field';
+            }
+            if ($this->password !== $this->passwordRepeat) {
+                $this->errors['psw-repeat'] = 'Passwords not similar';
+            }
+        } else {
+            $this->errors['psw-repeat'] = 'EMPTY FIELD';
+        }
     }
 
     public function getName(): string
     {
         return $this->name;
     }
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-    public function getPasswordRepeat(): string
-    {
-        return $this->passwordRepeat;
-    }
+
     public function setName(string $name): void
     {
         $this->name = $name;
     }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
     public function setEmail(string $email): void
     {
         $this->email = $email;
     }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
     public function setPassword(string $password): void
     {
         $this->password = $password;
     }
+
+    public function getPasswordRepeat(): string
+    {
+        return $this->passwordRepeat;
+    }
+
     public function setPasswordRepeat(string $passwordRepeat): void
     {
         $this->passwordRepeat = $passwordRepeat;
     }
 
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    public function setErrors(array $errors): void
+    {
+        $this->errors = $errors;
+    }
+
 }
+
+
+
+

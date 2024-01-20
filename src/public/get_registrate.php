@@ -5,26 +5,26 @@
     <hr>
 
     <label for="name"><b>Name</b></label>
-      <?php if (isset($errors['name'])): ?>
-      <label style="color: red"><?php echo $errors['name']; ?></label>
+      <?php if (isset($input->getErrors()['name'])): ?>
+      <label style="color: red"><?php echo $input->getErrors()['name']; ?></label>
       <?php endif; ?>
     <input type="text" placeholder="Enter Name" name="name" id="name" required>
 
     <label for="email"><b>Email</b></label>
-      <?php if (isset($errors['email'])): ?>
-      <label style="color: red"><?php echo $errors['email']; ?></label>
+      <?php if (isset($input->getErrors()['email'])): ?>
+      <label style="color: red"><?php echo $input->getErrors()['email']; ?></label>
       <?php endif; ?>
     <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
     <label for="psw"><b>Password</b></label>
-      <?php if (isset($errors['psw'])): ?>
-      <label style="color: red"><?php echo $errors['psw']; ?></label>
+      <?php if (isset($input->getErrors()['psw'])): ?>
+      <label style="color: red"><?php echo $input->getErrors()['psw']; ?></label>
       <?php endif; ?>
     <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
     <label for="psw-repeat"><b>Repeat Password</b></label>
-      <?php if (isset($errors['psw-repeat'])): ?>
-      <label style="color: red"><?php echo $errors['psw-repeat']; ?></label>
+      <?php if (isset($input->getErrors()['psw-repeat'])): ?>
+      <label style="color: red"><?php echo $input->getErrors()['psw-repeat']; ?></label>
       <?php endif; ?>
     <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
     <hr>
@@ -79,7 +79,6 @@ opacity: 0.9;
 }
 
 .registerbtn:hover {
-opacity:1;
 }
 
 /* Add a blue text color to links */
