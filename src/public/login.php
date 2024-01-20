@@ -4,8 +4,9 @@
     </div>
 
     <div class="container">
-        <label for="username"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" required>
+
+        <label for="email"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="email" required>
 
         <label for="psw"><b>Password</b></label>
         <input type="password" placeholder="Enter Password" name="psw" required>
@@ -21,16 +22,7 @@
         <span class="psw">Forgot <a href="#">password?</a></span>
     </div>
 </form>
-<!doctype html>
-<html lang="ru">
-<head>
-    <title>Document</title>
-    <meta http-equiv="refresh" content="1">
-</head>
-<body>
-...
-</body>
-</html>
+
 <style>/* Bordered form */
 form {
     border: 3px solid #f1f1f1;

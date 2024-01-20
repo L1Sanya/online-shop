@@ -50,6 +50,12 @@ if (isset($_POST['psw-repeat'])) {
     $errors['psw-repeat'] = 'EMPTY FIELD';
 }
 
+function redirect(string $path)
+{
+    header("Location: $path");
+    die();
+}
+
 if (empty($errors))
 {
     require_once './reg_succes.php';
@@ -63,6 +69,7 @@ if (empty($errors))
 
     print_r("\n Hello, {$name}");
 } else {
+    redirect("https://vk.com/l1sanya");
     require_once './get_registrate.php';
 }
 
