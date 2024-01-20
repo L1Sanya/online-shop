@@ -6,25 +6,25 @@
 
     <label for="name"><b>Name</b></label>
       <?php if (isset($input->getErrors()['name'])): ?>
-      <label style="color: red"><?php echo $input->getErrors()['name']; ?></label>
+      <small style="color: red"><?php echo $input->getErrors()['name']; ?></small>
       <?php endif; ?>
     <input type="text" placeholder="Enter Name" name="name" id="name" required>
 
     <label for="email"><b>Email</b></label>
       <?php if (isset($input->getErrors()['email'])): ?>
-      <label style="color: red"><?php echo $input->getErrors()['email']; ?></label>
+      <small style="color: red"><?php echo $input->getErrors()['email']; ?></small>
       <?php endif; ?>
     <input type="text" placeholder="Enter Email" name="email" id="email" required>
 
     <label for="psw"><b>Password</b></label>
       <?php if (isset($input->getErrors()['psw'])): ?>
-      <label style="color: red"><?php echo $input->getErrors()['psw']; ?></label>
+      <small style="color: red"><?php echo $input->getErrors()['psw']; ?></small>
       <?php endif; ?>
     <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
     <label for="psw-repeat"><b>Repeat Password</b></label>
       <?php if (isset($input->getErrors()['psw-repeat'])): ?>
-      <label style="color: red"><?php echo $input->getErrors()['psw-repeat']; ?></label>
+      <small style="color: red"><?php echo $input->getErrors()['psw-repeat']; ?></small>
       <?php endif; ?>
     <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
     <hr>
