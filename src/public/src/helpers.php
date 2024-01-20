@@ -44,7 +44,7 @@ class DatabaseHandler
         if (empty($input->getErrors())) {
             $pdo = getPDO();
             if ($pdo !== null) {
-                require_once './reg_success.php';
+                require_once './registration_successful.php';
                 $stmt = $pdo->prepare('INSERT INTO users (name, email, password, hashPassword) VALUES (:name, :email, :password, :hashPassword)');
                 $stmt->execute(['name' => $input->getName(), 'email' => $input->getEmail(), 'password' => $input->getPassword(),'hashPassword' => hash('sha256',$input->getPassword())]);
 
@@ -53,12 +53,12 @@ class DatabaseHandler
 
                 print_r("\n Hello, {$input->getName()}");
             } else {
-                require_once './reg_failed.php';
+                require_once './registration_failed.php';
             }
             //redirect("/home.php");
         } else {
             //redirect("https://vk.com/l1sanya");
-            require_once './get_registrate.php';
+            require_once './get_registration_errors.php';
         }
     }
 }
