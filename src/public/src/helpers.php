@@ -8,7 +8,7 @@ function getPDO(): ?PDO
     } catch (Exception $e) {
         echo "Connection failed";
     }
-        return new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
+    return new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
 }
 function logout(): void{
     unset($_SESSION['user']['id']);
@@ -58,7 +58,7 @@ class DatabaseHandler
             //redirect("/home.php");
         } else {
             //redirect("https://vk.com/l1sanya");
-            require_once './get_registration_errors.php';
+            require_once './get_registrate.php';
         }
     }
 }

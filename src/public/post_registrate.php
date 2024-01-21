@@ -2,14 +2,13 @@
 require __DIR__ . '/src/helpers.php';
 
 $input = new Input(
-             $_POST['name'],
-             $_POST['email'],
-             $_POST['psw'],
-             $_POST['psw-repeat']
+    $_POST['name'],
+    $_POST['email'],
+    $_POST['psw'],
+    $_POST['psw-repeat']
 );
 
 DatabaseHandler::addUser($input);
-
 
 class Input
 {
@@ -137,7 +136,6 @@ class Input
     }
 
 }
-
 
 
 
