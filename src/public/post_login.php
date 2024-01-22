@@ -1,16 +1,12 @@
 <?php
-//session_start();
-//$_SESSION['user_id'];
-
 require_once __DIR__ . '/src/helpers.php';
-
 
 $input = new Auth(
     $_POST['email'],
     $_POST['psw']
 );
 
-$input->authenticate();
+$input->authenticate($input);
 
 
 
@@ -31,35 +27,33 @@ class Auth{
         $this->errors = [];
     }
 
-    public function authenticate():void {
+    public function authenticate($input):void {
         $pdo = new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
 
         $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email');
-        $stmt->execute(['email' => $this->email]);
+        $stmt->execute(['email' => $input->email]);
         $userInfo = $stmt->fetch();
 
         if (empty($userInfo)) {
+            $input->errors['email'] = 'Пользователя с таким Email не существует';
             require_once './get_login.php';
-            $this->getErrors()['email'] = 'Пользователя с таким Email не существует';
-            if (isset($this->email)) {
-                if (empty($this->email)) {
-                    $this->errors['email'] = "Please, complete this field";
-                }
-            }
         } else {
-            if (hash('sha256',$this->password) === $userInfo['hashpassword']) {
+            if (hash('sha256', $input->password) === $userInfo['hashpassword']) {
                 session_start();
                 $_SESSION['user_name'] = $userInfo['name'];
                 $_SESSION['user_email'] = $userInfo['email'];
                 $_SESSION['user_id'] = $userInfo['id'];
                 redirect('./main.php');
             } else {
-                $this->getErrors()['psw'] = "Неверный пароль или email";
+                    $input->errors['psw'] = "Неверный пароль";
+                require_once './get_login.php';
             }
         }
+
     }
     public function getErrors(): array
     {
         return $this->errors;
     }
+
 }

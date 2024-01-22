@@ -1,13 +1,13 @@
 <form action="post_login.php" method="post">
     <div class="imgcontainer">
-        <img src="https://t3.ftcdn.net/jpg/04/54/09/98/360_F_454099801_32LqElT2W1vgRQ6YRsp3h2IsKQxTCnaG.jpg" alt="LOG IN" class="avatar">
+        <img src="https://static.vecteezy.com/system/resources/previews/016/177/870/non_2x/login-buttons-sign-label-speech-login-vector.jpg" alt="LOG IN" class="avatar">
     </div>
 
     <div class="container">
 
-        <label for="email"><b>Username</b></label>
+        <label for="email"><b>Email</b></label>
         <?php if (isset($input) && (isset($input->getErrors()['email']))): ?>
-            <small style="color: red"><?php echo $input->getErrors()['email']; ?></small>
+            <label style="color: red"><?php echo $input->getErrors()['email']; ?></label>
         <?php endif; ?>
         <input type="text" placeholder="Enter Email" name="email" required>
 

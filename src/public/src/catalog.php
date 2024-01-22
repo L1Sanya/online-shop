@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="container logout">
-            <a style="color: #e0e0e0" href="/actions/logout.php">Выход</a>
+            <a style="color: #e0e0e0" href="src/actions/logout.php">Выход</a>
         </div>
     </div>
 </header>
