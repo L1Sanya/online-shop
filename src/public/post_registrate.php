@@ -31,7 +31,7 @@ class Input
 
     public function validate(): void
     {
-        require_once __DIR__ . '/src/helpers.php';
+        //require_once __DIR__ . '/src/helpers.php';
 
         if (isset($this->name)) {
 
@@ -41,7 +41,7 @@ class Input
             if (strlen($this->name) < 2) {
                 $this->errors['name'] = "Name length can't be < 2";
             }
-            if (!checkName($this->name)) {
+            if (!$this->checkName($this->name)) {
                 $this->errors['name'] = 'Illegal characters';
             }
         } else {
@@ -133,6 +133,17 @@ class Input
     public function setErrors(array $errors): void
     {
         $this->errors = $errors;
+    }
+    public function checkName($name): bool {
+        $string = "!@#$%^&*()-=[]{}/><,.';:\|";
+        for ($i = 0; $i < strlen($this->name); $i++) {
+            for ($j = 0; $j < strlen($string); $j++) {
+                if ($this->name[$i] === $string[$j]){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

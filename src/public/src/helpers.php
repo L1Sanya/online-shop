@@ -1,5 +1,4 @@
 <?php
-
 function getPDO(): ?PDO
 {
     $pdo = null;
@@ -21,19 +20,6 @@ function redirect(string $path){
     die();
 }
 
-function checkName(string $name): bool
-{
-    $string = "!@#$%^&*()-=[]{}/><,.';:\|";
-    for ($i = 0; $i < strlen($name); $i++) {
-        for ($j = 0; $j < strlen($string); $j++) {
-            if ($name[$i] === $string[$j]){
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 
 class DatabaseHandler
 {
@@ -44,21 +30,22 @@ class DatabaseHandler
         if (empty($input->getErrors())) {
             $pdo = getPDO();
             if ($pdo !== null) {
-                require_once './registration_successful.php';
-                $stmt = $pdo->prepare('INSERT INTO users (name, email, password, hashPassword) VALUES (:name, :email, :password, :hashPassword)');
-                $stmt->execute(['name' => $input->getName(), 'email' => $input->getEmail(), 'password' => $input->getPassword(),'hashPassword' => hash('sha256',$input->getPassword())]);
+                $stmt = $pdo->prepare('INSERT INTO users (name, email, hashPassword) VALUES (:name, :email, :hashPassword)');
+                $stmt->execute(['name' => $input->getName(), 'email' => $input->getEmail(), 'hashPassword' => hash('sha256',$input->getPassword())]);
 
                 $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
                 $stmt->execute(['email' => $input->getEmail()]);
 
-                print_r("\n Hello, {$input->getName()}");
+                redirect('/get_login.php');
+
             } else {
-                require_once './registration_failed.php';
+                require_once '/actions/registration_failed.php';
             }
             //redirect("/home.php");
         } else {
-            //redirect("https://vk.com/l1sanya");
+
             require_once './get_registrate.php';
         }
     }
+
 }

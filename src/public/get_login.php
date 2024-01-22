@@ -6,9 +6,15 @@
     <div class="container">
 
         <label for="email"><b>Username</b></label>
+        <?php if (isset($input) && (isset($input->getErrors()['email']))): ?>
+            <small style="color: red"><?php echo $input->getErrors()['email']; ?></small>
+        <?php endif; ?>
         <input type="text" placeholder="Enter Email" name="email" required>
 
         <label for="psw"><b>Password</b></label>
+        <?php if (isset($input) && (isset($input->getErrors()['psw']))): ?>
+            <small style="color: red"><?php echo $input->getErrors()['psw']; ?></small>
+        <?php endif; ?>
         <input type="password" placeholder="Enter Password" name="psw" required>
 
         <button type="submit">Login</button>
