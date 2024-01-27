@@ -1,0 +1,70 @@
+<div class="card-wrapper">
+  <div class="row">
+      <div class="col-md-12">
+         <h4>Products</h4>
+         <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($products as $product) : ?>
+        <form action="/add-product" method="POST">
+          <tr>
+            <td><<img class="card-img-top" src="<?php echo $product['img_url']; ?>" alt="Card image"  width="250" height="190"></td>
+            <td><a href="#"><h5 class="card-title"><?php echo $product['name']; ?></h5></a><br>
+                <input type="hidden" value="<?php echo "{$product['id']}"; ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
+                <br>
+                <input type="text" placeholder="Enter quantity" name="quantity" id="quantity" required>
+                <br>
+                <button type="submit" class="registerbtn">Add products</button>
+            </td>
+            <td>Leen Bakker</td>
+            <td><?php echo "{$product['price']} руб."; ?></td>
+          </tr>
+        </form>
+        <?php endforeach; ?>
+
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  </div>
+<style>
+body{
+  background:#eaeaea;
+}
+
+.wrapper{
+  width:100%;
+  max-width: 800px;
+  margin: 48px auto;
+}
+
+.card-wrapper{
+  border-radius:2px;
+  padding:24px;
+  background:white;
+  box-shadow: rgba(0,0,0,0.2) 0px 10px 20px;
+  margin-bottom:48px;
+}
+
+.wrapper table{
+  margin-top:24px;
+  vertical-align: center;
+}
+
+.wrapper table img{
+  max-width:80px;
+  max-height:80px;
+}
+
+.wrapper table td{
+  vertical-align:middle;
+}
+</style>
