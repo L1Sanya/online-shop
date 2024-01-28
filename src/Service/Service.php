@@ -1,7 +1,7 @@
 <?php
 class Service
 {
-    public function logout(): void{
+    public function logout(): void {
         unset($_SESSION['user']['id']);
         redirect('/.php');
     }

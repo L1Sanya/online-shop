@@ -3,8 +3,15 @@
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
+use App\Autoloader;
+use Controller\UserController;
+use Controller\ProductController;
+Autoloader::register();
+
+
+
 if ($requestUri === '/login') {
-    require_once './../Controller/UserController.php';
+
     if ($requestMethod === 'GET') {
         $obj = new UserController();
         $obj->getLogin();
@@ -16,7 +23,7 @@ if ($requestUri === '/login') {
     }
 
 } elseif ($requestUri === '/registrate') {
-    require_once './../Controller/UserController.php';
+
     if ($requestMethod === 'GET') {
         $obj = new UserController();
         $obj->getRegistrate();
@@ -28,13 +35,16 @@ if ($requestUri === '/login') {
     }
 
 } elseif ($requestUri === '/main') {
-    require_once './../Controller/ProductController.php';
+
     $obj = new ProductController();
     $obj->getCatalog();
-}
+} elseif ($requestUri === '/logout') {
 
-elseif ($requestUri === '/add-product') {
-    require_once './../Controller/ProductController.php';
+    $obj = new UserController();
+    $obj->logout();
+
+} elseif ($requestUri === '/add-product') {
+
     $obj = new ProductController();
     $obj->addProduct();
 }
@@ -42,3 +52,7 @@ elseif ($requestUri === '/add-product') {
 else {
     require_once './../View/404.html';
 }
+
+
+
+

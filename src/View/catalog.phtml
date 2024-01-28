@@ -1,70 +1,299 @@
-<div class="card-wrapper">
-  <div class="row">
-      <div class="col-md-12">
-         <h4>Products</h4>
-         <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Item</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
-          </tr>
-        </thead>
-        <tbody>
+<body>
+<!-- PEN CONTENT -->
+<div class="content">
+    <div class="content-row">
         <?php foreach ($products as $product) : ?>
         <form action="/add-product" method="POST">
-          <tr>
-            <td><<img class="card-img-top" src="<?php echo $product['img_url']; ?>" alt="Card image"  width="250" height="190"></td>
-            <td><a href="#"><h5 class="card-title"><?php echo $product['name']; ?></h5></a><br>
-                <input type="hidden" value="<?php echo "{$product['id']}"; ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
-                <br>
-                <input type="text" placeholder="Enter quantity" name="quantity" id="quantity" required>
-                <br>
-                <button type="submit" class="registerbtn">Add products</button>
-            </td>
-            <td>Leen Bakker</td>
-            <td><?php echo "{$product['price']} руб."; ?></td>
-          </tr>
+        <div class="card m3">
+            <div class="logo"></div>
+            <img class="card-img-top" src="<?php echo $product['img_url']; ?>" alt="Card image"  width="300"
+                 height="500">
+            <div class="car"></div>
+            <div class="title">
+                <h1><a href="#"><h5 class="card-title"><?php echo $product['name']; ?></h5></a></h1>
+                <p class="card-text text-muted"><?php echo $product['description']; ?></p>
+            </div>
+            <div class="spec-container">
+                <div class="transmission">
+                    <p><?php echo "{$product['price']} руб."; ?><p>
+                </div>
+                <div class="acceleration">
+                    <p class="card-text text-muted"><?php echo $product['description']; ?></p>
+                </div>
+                <div class="gasoline">
+                    <svg aria-hidden="true" width="100%" height="100%" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    </svg>
+                </div>
+            </div>
+        </div>
+            <input type="hidden" value="<?php echo "{$product['id']}"; ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
+            <br>
+            <input type="text" name="quantity" id="quantity" required>
+            <br>
+            <button type="submit" class="registerbtn">+</button>
         </form>
         <?php endforeach; ?>
-
-        </tbody>
-      </table>
-
     </div>
-  </div>
-  </div>
-<style>
-body{
-  background:#eaeaea;
-}
+</div>
 
-.wrapper{
-  width:100%;
-  max-width: 800px;
-  margin: 48px auto;
-}
+<!-- BRAND -->
+<p <p><a style="position: absolute; left: 100px; top: 50px;" href="/logout">LOGOUT</a></p></p>
+</body>
+<style>/* BASE STYLING */
+    :root {
+        --col-bg: 20,20,20;
+        --col-fg-p: 0,102,177;
+        --col-fg-p2: 0,61,120;
+        --col-fg-p3: 226,39,24;
+        --col-fg-s: 184,171,143;
+        --col-text: 120,120,120;
+    }
 
-.card-wrapper{
-  border-radius:2px;
-  padding:24px;
-  background:white;
-  box-shadow: rgba(0,0,0,0.2) 0px 10px 20px;
-  margin-bottom:48px;
-}
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        padding: 0;
 
-.wrapper table{
-  margin-top:24px;
-  vertical-align: center;
-}
+        display: grid;
+        place-items: center;
+        background-color: rgb(var(--col-bg));
+        color: rgb(var(--col-text));
+        font-family: system-ui;
+        overflow-x: hidden;
+    }
 
-.wrapper table img{
-  max-width:80px;
-  max-height:80px;
-}
+    /* width */
+    body::-webkit-scrollbar {
+        width: 13px;
+        background: rgb(var(--col-bg));
+    }
+    /* Track */
+    body::-webkit-scrollbar-track {
+        background: rgb(var(--col-bg));
+        background-clip: padding-box;
+        width: 8px;
+        margin-top: 30px;
+        margin-bottom: 5px;
+    }
+    /* Handle */
+    body::-webkit-scrollbar-thumb {
+        background-color: rgb(60, 70, 100);
+        border-radius: 100px;
+        border: 3px solid rgba(0,0,0,0);
+        background-clip: padding-box;
+        margin-top: 30px;
+        margin-bottom: 5px;
+    }
 
-.wrapper table td{
-  vertical-align:middle;
-}
-</style>
+    .bname {
+        position: absolute;
+        top: 1%;
+        right: 1%;
+        font-variant: all-small-caps;
+        letter-spacing: 2px;
+        color: rgb(var(--col-fg-p));
+        font-weight: 600;
+        font-size: 13px;
+        margin: 0;
+        font-style: italic;
+    }
+
+    .bname .darkblue {
+        color: rgb(var(--col-fg-p2));
+    }
+
+    .bname .red {
+        color: rgb(var(--col-fg-p3));
+    }
+
+    /* PEN CONTENT STYLING */
+
+    .content {
+        text-align: center;
+    }
+
+    .content-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        width: 100vw;
+        place-items: center;
+        margin-top: 40px;
+    }
+
+    @media screen and (max-width:1600px) {
+        .content-row {
+            grid-template-columns: repeat(2,1fr);
+        }
+    }
+
+    @media screen and (max-width:1000px) {
+        .content-row {
+            grid-template-columns: repeat(1,1fr);
+        }
+    }
+
+    .card {
+        max-height: 500px;
+        height: 80vh;
+        aspect-ratio: 10 / 16;
+        position: relative;
+        border-radius: 2px;
+        transform-style: preserve-3d;
+        transition: rotate ease 400ms;
+        margin-bottom: 6vh;
+    }
+
+    .card::before {
+        content: "";
+        border-radius: 2px;
+        position: absolute;
+        inset: 0;
+        z-index: 100;
+        background-image: radial-gradient(circle, transparent 10px, black);
+        opacity: 0;
+        transition: opacity 400ms;
+    }
+
+    .card:hover::before {
+        opacity: 1;
+    }
+
+    .card::after {
+        content: "";
+        border-radius: 2px;
+        position: absolute;
+        inset: 80% 0.5rem 0.5rem;
+        translate: 0;
+        transform: translateZ(-100px);
+        background: black;
+        filter: blur(1rem);
+        z-index: 1;
+        transition: rotate 300ms, translate 300ms;
+    }
+
+    .card:hover::after {
+        rotate: x calc(35deg * -1);
+        translate: 0 60px;
+    }
+
+    .card:hover {
+        rotate: x 35deg;
+    }
+
+    .card:hover .content-row {
+        transform: perspective(900px);
+    }
+
+    .background {
+        position: absolute;
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: -350px center;
+    }
+
+    .logo, .car, .title {
+        position: absolute;
+    }
+
+    .car {
+        opacity: 0;
+        background-position: center;
+        transform-origin: bottom;
+        z-index: 100;
+        transition: 600ms;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .card:hover .car {
+        opacity: 1;
+        rotate: x calc(35deg * -1);
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -55%) translateZ(-10px);
+    }
+
+
+
+    .card:hover .spec-container {
+        opacity: 1;
+        transition: 300ms;
+        transition-delay: 700ms;
+    }
+
+    .card:hover .logo {
+        transform: translateY(-2.5rem) translateZ(20px);
+        rotate: x calc(35deg * -1);
+        transition: 300ms;
+        transition-delay: 400ms;
+    }
+
+    .title {
+        z-index: 1000;
+        width: 65%;
+        margin-inline: auto;
+        inset: auto 0 1rem;
+        transform: translateY(0rem) translateZ(20px);
+        transition: 600ms;
+    }
+
+    .card:hover .title {
+        transform: translateY(-1.5rem) translateZ(20px);
+        rotate: x calc(35deg * -1);
+    }
+
+    .title h1 {
+        font-weight: 400;
+        letter-spacing: 4px;
+        font-size: 30px;
+        transition: 200ms ease;
+    }
+
+    .card:hover .title h1 {
+        font-size: 33px;
+    }
+
+    .title p, .title h1 {
+        margin: 0;
+        padding: 0;
+        color: white;
+    }
+
+    .spec-container {
+        position: absolute;
+        z-index: 1000;
+        bottom: -15%;
+        right: -120%;
+        transform: translate(-50%, -50%);
+        rotate: x calc(35deg * -1);
+        transition: 100ms;
+        transition-delay: 0;
+        opacity: 0;
+    }
+
+    .spec-container div svg path {
+        fill: white;
+    }
+
+    .spec-container div svg {
+        height: 40px;
+        width: min-content;
+    }
+
+    .transmission, .acceleration, .gasoline {
+        display: flex;
+        align-items: center;
+    }
+
+    .transmission p, .acceleration p, .gasoline p {
+        width: 100px;
+        text-align: left;
+        color: white;
+        margin: 0;
+        font-weight: 100;
+    }</st>

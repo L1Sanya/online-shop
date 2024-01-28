@@ -1,6 +1,7 @@
 <?php
+namespace Model;
+use Model\Model;
 
-require './../Model/Model.php';
 class Product extends Model
 {
     public function getAll() : array

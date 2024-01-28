@@ -1,4 +1,5 @@
 <?php
+namespace Controller;
 class UserController
 {
     public function getRegistrate()
@@ -37,31 +38,25 @@ class UserController
         if (isset($userInfo['name'])) {
             $name = $userInfo['name'];
             if (empty($name)) {
-                $errors['name'] = 'Имя должно быть заполнено';
+                $errors['name'] = "Please, complete this field";
             }
             if (strlen($name) < 2) {
-                $errors['name'] = 'Имя должно содержать 2 или более символов';
+                $errors['name'] = "Name length can't be < 2";
             }
         } else {
-            $errors['name'] = 'Поле name не указано';
+            $errors['name'] = 'Empty Field';
         }
 
         if (isset($userInfo['email'])) {
             $email = $userInfo['email'];
             if (empty($email)) {
-                $errors['email'] = 'Почта должна быть заполнена';
+                $errors['email'] = "Please, complete this field";
             }
-            $flag = false;
-            for ($i = 0; $i < strlen($email); $i++) {
-                if ($email[$i] === '@') {
-                    $flag = true;
-                }
-            }
-            if ($flag === false) {
-                $errors['email'] = 'Почта должна содержать "@"';
+            if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+                $errors['email'] = 'Invalid email';
             }
         } else {
-            $errors['email'] = 'Поле email не указано';
+            $errors['email'] = 'EMPTY FIELD';
         }
 
         if (isset($userInfo['psw'])) {
@@ -125,5 +120,13 @@ class UserController
             }
         }
         require_once './../View/get_login.phtml';
+    }
+    public function logout(): void {
+        unset($_SESSION['user']['id']);
+        $this->redirect('/login');
+    }
+    public function redirect(string $path){
+        header("Location: $path");
+        die();
     }
 }

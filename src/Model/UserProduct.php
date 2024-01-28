@@ -1,6 +1,6 @@
 <?php
-
-require './../Model/Model.php';
+namespace Model;
+use Model\Model;
 class UserProduct extends Model
 {
     public function create(int $userId, int $productId, int $quantity) : void
