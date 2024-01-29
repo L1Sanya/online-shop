@@ -1,6 +1,5 @@
 <?php
 namespace Model;
-use Model\Model;
 
 class Product extends Model
 {

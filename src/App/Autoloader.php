@@ -1,20 +1,18 @@
 <?php
 
-namespace App;
 
 class Autoloader
 {
-        public static function register()
+    public static function registrate()
     {
-        spl_autoload_register(function ($className) {
-            $classPath = str_replace('\\', '/', $className) . '.php';
-            if (file_exists($classPath)) {
-                require_once $classPath;
-            } else {
-                echo "Класс $className не найден";
+        $autoloader = function (string $class): bool {
+            $filename = './../' . str_replace('\\', '/', $class) . '.php';
+            if (file_exists($filename)) {
+                require_once $filename;
+                return true;
             }
-        });
-
+            return false;
+        };
+        spl_autoload_register($autoloader);
     }
-
 }

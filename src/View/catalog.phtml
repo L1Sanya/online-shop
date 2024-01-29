@@ -26,11 +26,11 @@
                 </div>
             </div>
         </div>
-            <input type="hidden" value="<?php echo "{$product['id']}"; ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
-            <br>
-            <input type="text" name="quantity" id="quantity" required>
-            <br>
-            <button type="submit" class="registerbtn">+</button>
+            <form action="/processCart" method="post">
+                <input type="hidden" name="product_id" value="<?php echo $product["id"]; ?>">
+                <button type="submit" name="action" value="inc">+</button>
+                <button type="submit" name="action" value="dec">-</button>
+            </form>
         </form>
         <?php endforeach; ?>
     </div>

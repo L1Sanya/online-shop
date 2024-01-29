@@ -3,11 +3,11 @@
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-use App\Autoloader;
-use Controller\UserController;
-use Controller\ProductController;
-Autoloader::register();
+require_once "./../App/Autoloader.php";
+use Controller\UserController as UserController;
+use Controller\ProductController as ProductController;
 
+Autoloader::registrate();
 
 
 if ($requestUri === '/login') {

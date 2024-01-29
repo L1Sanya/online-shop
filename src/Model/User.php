@@ -1,6 +1,6 @@
 <?php
 namespace Model;
-use Model\Model;
+
 class User extends Model
 {
     public function insertData(string $name, string $email, string $hash) : void
