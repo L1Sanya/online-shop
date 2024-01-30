@@ -25,7 +25,7 @@ class ProductController
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
         }
-        $errorsQuantity = $this->validateQuantity($_POST);
+        $errorsQuantity = $this->validateQuantity();
 
         if (empty($errorsQuantity)) {
             $userId = $_SESSION['user_id'];
@@ -67,15 +67,6 @@ class ProductController
             $errorsQuantity['quantity'] = 'Поле quantity не указано';
         }
         return $errorsQuantity;
-    }
-
-    public function getCart() : void{
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-        } else {
-            require_once './../View/cart.phtml';
-        }
     }
 
 }
