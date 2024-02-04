@@ -1,22 +1,17 @@
 <?php
+namespace Service;
+use JetBrains\PhpStorm\NoReturn;
+
 class Service
 {
-    public function logout(): void {
+    #[NoReturn] public function logout(): void {
         unset($_SESSION['user']['id']);
-        redirect('/.php');
+        $this->redirect('/.php');
     }
-    public function redirect(string $path){
+    #[NoReturn] public static function redirect(string $path): void
+    {
         header("Location: $path");
         die();
     }
-    public function getPDO(): ?PDO
-    {
-        $pdo = null;
-        try {
-            $pdo = new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
-        } catch (Exception $e) {
-            echo "Connection failed";
-        }
-        return new PDO("pgsql:host=database;port=5432;dbname=testdb", "alex", "2612");
-    }
+
 }

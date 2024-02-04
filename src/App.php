@@ -5,76 +5,42 @@ use Controller\UserController;
 
 class App
 {
-    private array $routes = [
-        '/registrate' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getRegistrate',
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'postRegistrate',
-            ],
-        ],
-        '/login' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'getLogin',
-            ],
-            'POST' => [
-                'class' => UserController::class,
-                'method' => 'postLogin',
-            ],
-        ],
-        '/logout' => [
-            'GET' => [
-                'class' => UserController::class,
-                'method' => 'logout',
-            ],
-        ],
-        //'/main' => [
-        //    'GET' => [
-        //        'class' => ProductController::class,
-        //        'method' => 'getCatalog',
-        //    ],
-        //],
-        '/cart' => [
-            'POST' => [
-                'class' => ProductController::class,
-                'method' => 'processCart',
-            ],
-            'GET' => [
-                'class' => ProductController::class,
-                'method' => 'getCart',
-            ],
-        ],
-    ];
-    public function addRoute(string $url, string $method, string $class, string $handler): void {
-        $this->routes[$url][$method] = [
+    private array $routes = [];
+    public function get(string $url, string $class, string $handler): void
+    {
+        $this->routes[$url]['GET'] = [
             'class' => $class,
-            'method' => $handler,
+            'method' => $handler
+        ];
+    }
+    public function post(string $url, string $class, string $handler): void
+    {
+        $this->routes[$url]['POST'] = [
+            'class' => $class,
+            'method' => $handler
         ];
     }
     public function run(): void{
 
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        if (isset($this->routes[$requestUri][$requestMethod])) {
-            $route = $this->routes[$requestUri][$requestMethod];
-            $class = $route['class'];
-            $method = $route['method'];
-            if (class_exists($class)) {
+
+        if (isset($this->routes[$requestUri])) {
+            $routeMethods = $this->routes[$requestUri];
+            if (isset($routeMethods[$requestMethod])) {
+                $handler = $routeMethods[$requestMethod];
+
+                $class = $handler['class'];
+                $method = $handler['method'];
+
                 $obj = new $class();
-                if (method_exists($obj, $method)) {
-                    $obj->$method();
-                } else {
-                    echo "Метод $method не найден в классе $class";
-                }
+                $obj->$method($_POST);
             } else {
-                echo "Класс $class не найден";
+                echo "Метод $requestMethod не поддерживается для адреса $requestUri";
             }
         } else {
-            echo "Маршрут $requestUri с методом $requestMethod не найден";
+            require_once './../View/404.html';
         }
     }
+
 }
