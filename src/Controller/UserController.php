@@ -12,7 +12,6 @@ class UserController
     {
         require_once './../View/get_registrate.phtml';
     }
-
     public function postRegistrate()
     {
         $errors = RegistrationRequest::validate($_POST);
