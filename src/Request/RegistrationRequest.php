@@ -4,7 +4,7 @@ namespace Request;
 
 class RegistrationRequest extends Request
 {
-   public static function validate(array $userInfo) : array
+    public static function validate(array $userInfo) : array
     {
         $errors = [];
 

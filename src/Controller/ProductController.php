@@ -9,7 +9,8 @@ use Request\Request;
 class ProductController
 {
 
-    public function getCatalog(): void {
+    public function getCatalog(): void
+    {
         Service::checkCurrentSession();
         $userId = $_SESSION['user_id'];
         $quantity = 0;

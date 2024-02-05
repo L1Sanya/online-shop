@@ -17,7 +17,8 @@ class Product extends Model
         $this->price = $price;
         $this->img_url = $img_url;
     }
-    public static function getAll() : ?array {
+    public static function getAll() : ?array
+    {
         $stmt = self::getPdo()->query('SELECT * FROM products');
         $products = $stmt->fetchAll();
         foreach ($products as $product) {

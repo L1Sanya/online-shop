@@ -21,8 +21,8 @@ class App
             'method' => $handler
         ];
     }
-    public function run(): void{
-
+    public function run(): void
+    {
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
