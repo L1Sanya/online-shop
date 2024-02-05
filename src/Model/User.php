@@ -15,6 +15,23 @@ class User extends Model
         $this->email = $email;
         $this->password = $password;
     }
+
+    public function addUserData(string $name, string $email, string $hash) : void
+    {
+        $stmt = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :hash)");
+        $stmt->execute(['name' => $name, 'email' => $email, 'hash' => $hash]);
+    }
+
+    public static function getOneByEmail($email): ?User
+    {
+        $stmt = self::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
+        $stmt->execute(['email' => $email]);
+        $data = $stmt->fetch();
+        if (empty($data)) {
+            return null;
+        }
+        return new User($data['id'], $data['name'], $data['email'], $data['password']);
+    }
     public function getId(): int
     {
         return $this->id;
@@ -33,23 +50,5 @@ class User extends Model
     public function getPassword(): string
     {
         return $this->password;
-    }
-    public function insertData(string $name, string $email, string $hash) : void
-    {
-        $stmt = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :hash)");
-        $stmt->execute(['name' => $name, 'email' => $email, 'hash' => $hash]);
-    }
-
-    public static function getOneByEmail($email): ?User
-    {
-        $stmt = self::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
-        $stmt->execute(['email' => $email]);
-        $data = $stmt->fetch();
-
-        if (empty($data)) {
-            return null;
-        }
-
-        return new User($data['id'], $data['name'], $data['email'], $data['password']);
     }
 }

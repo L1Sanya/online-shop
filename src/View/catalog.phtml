@@ -5,8 +5,8 @@
         <?php foreach ($products as $product) : ?>
         <div class="card m3">
             <div class="logo"></div>
-            <img class="card-img-top" src="<?php echo $product->getImgUrl(); ?>" alt="Card image"  width="200"
-                 height="300">
+            <img class="card-img-top" src="<?php echo $product->getImgUrl(); ?>" alt="Card image"  width="400"
+                 height="500">
             <div class="car"></div>
             <div class="title">
                 <h1><a href="#"><h5 class="card-title"><?php echo $product->getName(); ?></h5></a></h1>
@@ -26,18 +26,19 @@
             </div>
         </div>
             <div id="controls">
-                <p>Количество: <?php echo $this->getProductQuantity($product, $_SESSION['user_id']); ?></p>
+                <p>Quantity in Cart: <?php echo $quantity = $this->getProductQuantity($product, $_SESSION['user_id']); ?></p>
 
-                <form action="/product-plus" method="POST" class="plus-form">
+                <form method="POST" onsubmit="return false" class="plus-form">
                     <input type="hidden" value="<?php echo $product->getId(); ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
                     <button type="submit" class="buttons">+</button>
                 </form>
 
-                <form action="/product-minus" method="POST" class="minus-form">
+                <form method="POST" onsubmit="return false" class="minus-form">
                     <input type="hidden" value="<?php echo $product->getId(); ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
                     <button type="submit" class="buttons">-</button>
                 </form>
             </div>
+        <br>
         <?php endforeach; ?>
     </div>
 </div>
@@ -48,20 +49,38 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
-    $("document").ready(function() {
-        $('#addProductForm').submit(function() {
-            $.ajax({
-                type: "POST",
-                url: "/product-plus",
-                // dataType: 'html',
-                data: $(this).serialize(),
-                success: function() {
-                    console.log('done');
-                    $('input.quantity').val("");
-                }
-            })
+    $('.plus-form').submit(function(event) {
+        event.preventDefault();
+        const form = $(this);
+        const url = "/product-plus";
+        const productId = form.find("input[name='product-id']").val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { "product-id": productId },
+            success: function(data) {
+
+            }
         });
     });
+
+    $('.minus-form').submit(function(event) {
+        event.preventDefault();
+        const form = $(this);
+        const url = "/product-minus";
+        const productId = form.find("input[name='product-id']").val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { "product-id": productId },
+            success: function(data) {
+
+            }
+        });
+    });
+
 </script>
 <style>/* BASE STYLING */
     :root {

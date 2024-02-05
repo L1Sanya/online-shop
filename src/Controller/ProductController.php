@@ -15,21 +15,10 @@ class ProductController
         $quantity = 0;
 
         $products = Product::getAll();
-        $productsCount = $this->countProducts($userId);
 
         require_once './../View/catalog.phtml';
 
     }
-    public function countProducts($userId): int
-    {
-        $cart = UserProduct::getCart($userId);
-        if ($cart === null) {
-            return 0;
-        }
-        return count($cart);
-    }
-
-
     public function getCartProducts(): void
     {
         Service::checkCurrentSession();
@@ -54,14 +43,14 @@ class ProductController
         $productId = $_POST['product-id'];
         $userId = $_SESSION['user_id'];
 
-        $product = UserProduct::getProductInCartInfo($productId, $userId);
+        $product = UserProduct::getUserProductInfo($productId, $userId);
         if (isset($product)) {
             $product->setQuantity($product->getQuantity() + 1);
             $quantity = $product->getQuantity();
             $product->save($quantity, $productId, $userId);
         } else {
             $quantity = 1;
-            UserProduct::create($userId, $productId, $quantity);
+            UserProduct::createProductInCart($userId, $productId, $quantity);
         }
         Service::redirect('/main');
     }
@@ -71,7 +60,7 @@ class ProductController
         $productId = $_POST['product-id'];
         $userId = $_SESSION['user_id'];
 
-        $product = UserProduct::getProductInCartInfo($productId, $userId);
+        $product = UserProduct::getUserProductInfo($productId, $userId);
         if (isset($product)) {
             $product->setQuantity($product->getQuantity() - 1);
             if ($product->getQuantity() < 1) {
@@ -89,7 +78,7 @@ class ProductController
         $productId = $productInfo->getId();
         $userId = $_SESSION['user_id'];
 
-        $productInCartInfo = userProduct::getProductInCartInfo($productId, $userId);
+        $productInCartInfo = userProduct::getUserProductInfo($productId, $userId);
         if (empty($productInCartInfo)) {
             return 0;
         } else {

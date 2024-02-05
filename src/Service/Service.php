@@ -6,7 +6,7 @@ class Service
 {
     #[NoReturn] public function logout(): void {
         unset($_SESSION['user']['id']);
-        $this->redirect('/.php');
+        $this->redirect('/login');
     }
     #[NoReturn] public static function redirect(string $path): void
     {

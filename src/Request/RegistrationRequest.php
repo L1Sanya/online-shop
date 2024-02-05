@@ -8,53 +8,30 @@ class RegistrationRequest extends Request
     {
         $errors = [];
 
-        if (isset($userInfo['name'])) {
-            $name = $userInfo['name'];
-            if (empty($name)) {
-                $errors['name'] = "Please, complete this field";
-            }
-            if (strlen($name) < 2) {
-                $errors['name'] = "Name length can't be < 2";
-            }
-        } else {
-            $errors['name'] = 'Empty Field';
+        if (empty($userInfo['name'])) {
+            $errors['name'] = "Please, complete this field";
+        } elseif (strlen($userInfo['name']) < 2) {
+            $errors['name'] = "Name length can't be < 2";
         }
 
-        if (isset($userInfo['email'])) {
-            $email = $userInfo['email'];
-            if (empty($email)) {
-                $errors['email'] = "Please, complete this field";
-            }
-            if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-                $errors['email'] = 'Invalid email';
-            }
-        } else {
-            $errors['email'] = 'EMPTY FIELD';
+        if (empty($userInfo['email'])) {
+            $errors['email'] = "Please, complete this field";
+        } elseif (filter_var($userInfo['email'], FILTER_VALIDATE_EMAIL) === false) {
+            $errors['email'] = 'Invalid email';
         }
 
-        if (isset($userInfo['psw'])) {
-            $password = $userInfo['psw'];
-            if (empty($password)) {
-                $errors['psw'] = 'Пароль должен быть заполнен';
-            }
-            if (strlen($password) < 3) {
-                $errors['psw'] = 'Пароль слишком короткий';
-            }
-        } else {
-            $errors['psw'] = 'Поле password не указано';
+        if (empty($userInfo['psw'])) {
+            $errors['psw'] = 'Password must be filled';
+        } elseif (strlen($userInfo['psw']) < 3) {
+            $errors['psw'] = 'Password is too short';
         }
 
-        if (isset($userInfo['psw-repeat'])) {
-            $passwordRep = $userInfo['psw-repeat'];
-            if (empty($passwordRep)) {
-                $errors['psw-repeat'] = 'Повторите пароль';
-            }
-            if ($password !== $passwordRep) {
-                $errors['psw-repeat'] = 'Пароли должны совпадать';
-            }
-        } else {
-            $errors['psw-repeat'] = 'Поле repeat password не указано';
+        if (empty($userInfo['psw-repeat'])) {
+            $errors['psw-repeat'] = 'Repeat the password';
+        } elseif ($userInfo['psw'] !== $userInfo['psw-repeat']) {
+            $errors['psw-repeat'] = 'Passwords do not match';
         }
+
         return $errors;
     }
 }

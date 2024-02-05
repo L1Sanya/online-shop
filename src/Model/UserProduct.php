@@ -14,7 +14,7 @@ class UserProduct extends Model
         $this->product_id = $product_id;
         $this->quantity = $quantity;
     }
-    public static function create(int $userId, int $productId, int $quantity) : void
+    public static function createProductInCart(int $userId, int $productId, int $quantity) : void
     {
         $stmt = self::getPdo()->prepare("INSERT INTO user_products (user_id, product_id, quantity) VALUES (:userId, :productId, :quantity)");
         $stmt->execute(['userId' => $userId, 'productId' => $productId, 'quantity' => $quantity]);
@@ -28,10 +28,9 @@ class UserProduct extends Model
         foreach ($cart as $productInCart) {
             $data[] = new UserProduct($productInCart['id'], $productInCart['user_id'], $productInCart['product_id'], $productInCart['quantity']);
         }
-        if (empty($data)) {
+        if (!($data)) {
             return null;
         }
-
         return $data;
     }
     public static function deleteProduct($productId, $userId): void
@@ -39,13 +38,13 @@ class UserProduct extends Model
         $stmt = self::getPdo()->prepare('DELETE FROM user_products WHERE product_id = :productId AND user_id = :userId');
         $stmt->execute(['productId' => $productId, 'userId' => $userId]);
     }
-    public static function getProductInCartInfo($productId, $userId): ?UserProduct
+    public static function getUserProductInfo($productId, $userId): ?UserProduct
     {
         $stmt = self::getPdo()->prepare('SELECT * FROM user_products WHERE product_id = :productId AND user_id = :userId');
         $stmt->execute(['productId' => $productId, 'userId' => $userId]);
         $data = $stmt->fetch();
 
-        if (empty($data)) {
+        if (!($data)) {
             return null;
         }
 

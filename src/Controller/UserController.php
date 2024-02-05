@@ -1,7 +1,9 @@
 <?php
 namespace Controller;
+use JetBrains\PhpStorm\NoReturn;
 use Model\User;
 use PDOException;
+use Request\Request;
 use Service\Service;
 use Request\RegistrationRequest;
 class UserController
@@ -25,7 +27,7 @@ class UserController
             try {
                 require './../Model/User.php';
                 $userModel = new User();
-                $userModel->insertData($name, $email, $hash);
+                $userModel->addUserData($name, $email, $hash);
 
                 Service::redirect('Location: /login');
             } catch (PDOException){
@@ -36,12 +38,12 @@ class UserController
         require_once './../View/get_registrate.phtml';
     }
 
-    public function getLogin()
+    public function getLogin(): void
     {
         require_once './../View/get_login.phtml';
     }
 
-    public function postLogin()
+    public function postLogin(): void
     {
 
         $errors = [];
@@ -69,9 +71,5 @@ class UserController
             }
         }
         require_once './../View/get_login.phtml';
-    }
-    public function logout(): void {
-        unset($_SESSION['user']['id']);
-        Service::redirect('/login');
     }
 }
