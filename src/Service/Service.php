@@ -13,5 +13,11 @@ class Service
         header("Location: $path");
         die();
     }
+    public static function checkCurrentSession(): void {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            Service::redirect('/login');
+        }
+    }
 
 }

@@ -10,18 +10,15 @@ class ProductController
 {
 
     public function getCatalog(): void {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            Service::redirect('Location: /login');
-        } else {
-            $userId = $_SESSION['user_id'];
-            $quantity = 0;
+        Service::checkCurrentSession();
+        $userId = $_SESSION['user_id'];
+        $quantity = 0;
 
-            $products = Product::getAll();
-            $productsCount = $this->countProducts($userId);
+        $products = Product::getAll();
+        $productsCount = $this->countProducts($userId);
 
-            require_once './../View/catalog.phtml';
-        }
+        require_once './../View/catalog.phtml';
+
     }
     public function countProducts($userId): int
     {
@@ -35,31 +32,25 @@ class ProductController
 
     public function getCartProducts(): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            Service::redirect('/login');
-        } else {
-            $userId = $_SESSION['user_id'];
+        Service::checkCurrentSession();
+        $userId = $_SESSION['user_id'];
 
-            $cart = UserProduct::getCart($userId);
-            $total = 0;
+        $cart = UserProduct::getCart($userId);
+        $total = 0;
 
-            if (!empty($cart)) {
-                foreach ($cart as $productInCart) {
-                    $productId = $productInCart->getProductId();
-                    $productInfo = Product::getOneById($productId);
-                    $productsInfo[] = $productInfo;
-                }
+        if (!empty($cart)) {
+            foreach ($cart as $productInCart) {
+                $productId = $productInCart->getProductId();
+                $productInfo = Product::getOneById($productId);
+                $productsInfo[] = $productInfo;
             }
-            require_once './../View/cart.phtml';
         }
+        require_once './../View/cart.phtml';
+
     }
-    #[NoReturn] public function plus(): void
+    #[NoReturn] public function plus(Request $request): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            Service::redirect('/login');
-        }
+        Service::checkCurrentSession();
         $productId = $_POST['product-id'];
         $userId = $_SESSION['user_id'];
 
@@ -74,12 +65,9 @@ class ProductController
         }
         Service::redirect('/main');
     }
-    #[NoReturn] public function minus(): void
+    #[NoReturn] public function minus(Request $request): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            Service::redirect('login');
-        }
+        Service::checkCurrentSession();
         $productId = $_POST['product-id'];
         $userId = $_SESSION['user_id'];
 

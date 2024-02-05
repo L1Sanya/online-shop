@@ -2,6 +2,7 @@
 
 use Controller\ProductController;
 use Controller\UserController;
+use Request\Request;
 
 class App
 {
@@ -34,7 +35,8 @@ class App
                 $method = $handler['method'];
 
                 $obj = new $class();
-                $obj->$method($_POST);
+                $request = new Request($_POST);
+                $obj->$method($request);
             } else {
                 echo "Метод $requestMethod не поддерживается для адреса $requestUri";
             }
