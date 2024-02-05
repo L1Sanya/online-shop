@@ -8,11 +8,11 @@ use Service\Service;
 use Request\RegistrationRequest;
 class UserController
 {
-    public function getRegistrate()
+    public function getRegistrate(): void
     {
         require_once './../View/get_registrate.phtml';
     }
-    public function postRegistrate()
+    public function postRegistrate(): void
     {
         $errors = RegistrationRequest::validate($_POST);
 
