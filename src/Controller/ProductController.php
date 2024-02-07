@@ -5,13 +5,13 @@ use Model\Product;
 use Model\UserProduct;
 use Service\Service;
 use Request\Request;
-use Service\SessionAutenticationService;
+use Service\SessionAutenticationInterface;
 
 class ProductController
 {
     public function getCatalog(): void
     {
-        SessionAutenticationService::check();
+        SessionAutenticationInterface::check();
         $userId = $_SESSION['user_id'];
         $quantity = 0;
 
@@ -22,7 +22,7 @@ class ProductController
     }
     public function getCartProducts(): void
     {
-        SessionAutenticationService::check();
+        SessionAutenticationInterface::check();
         $userId = $_SESSION['user_id'];
 
         $cart = UserProduct::getCart($userId);
@@ -40,7 +40,7 @@ class ProductController
     }
     #[NoReturn] public function plus(Request $request): void
     {
-        SessionAutenticationService::check();
+        SessionAutenticationInterface::check();
         $productId = $_POST['product-id'];
         $userId = $_SESSION['user_id'];
 
@@ -57,7 +57,7 @@ class ProductController
     }
     #[NoReturn] public function minus(Request $request): void
     {
-        SessionAutenticationService::check();
+        SessionAutenticationInterface::check();
         $productId = $_POST['product-id'];
         $userId = $_SESSION['user_id'];
 

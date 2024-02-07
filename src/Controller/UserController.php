@@ -6,7 +6,7 @@ use PDOException;
 use Request\LoginRequest;
 use Request\Request;
 use Service\Service;
-use Service\SessionAutenticationService;
+use Service\SessionAutenticationInterface;
 use Request\RegistrationRequest;
 class UserController
 {
