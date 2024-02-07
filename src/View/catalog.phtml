@@ -25,17 +25,17 @@
                 </div>
             </div>
         </div>
-            <div id="controls">
-                <p>Quantity in Cart: <?php echo $quantity = $this->getProductQuantity($product, $_SESSION['user_id']); ?></p>
+            <div class="controls">
+                <div> Количество: <span class="product-quantity"><?php echo $quantity = $this->getProductQuantity($product, $_SESSION['user_id']); ?></span></div>
 
-                <form method="POST" onsubmit="return false" class="plus-form">
-                    <input type="hidden" value="<?php echo $product->getId(); ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
-                    <button type="submit" class="buttons">+</button>
+                <form method="POST" class="plusProductForm">
+                    <input type="hidden" value="<?php echo $product->getId(); ?>" name="product-id">
+                    <button type="button" class="buttons plus">+</button>
                 </form>
 
-                <form method="POST" onsubmit="return false" class="minus-form">
-                    <input type="hidden" value="<?php echo $product->getId(); ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
-                    <button type="submit" class="buttons">-</button>
+                <form method="POST" class="minusProductForm">
+                    <input type="hidden" value="<?php echo $product->getId(); ?>" name="product-id">
+                    <button type="button" class="buttons minus">-</button>
                 </form>
             </div>
         <br>
@@ -49,38 +49,54 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
-    $('.plus-form').submit(function(event) {
-        event.preventDefault();
-        const form = $(this);
-        const url = "/product-plus";
-        const productId = form.find("input[name='product-id']").val();
+    $("document").ready(function() {
+        $('.plusProductForm').on('click', function(event) {
+            event.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: { "product-id": productId },
-            success: function(data) {
+            var form = $(this);
+            var productId = form.find("input[name='product-id']").val();
 
-            }
+            $.ajax({
+                type: "POST",
+                url: "/product-plus",
+                data: { 'product-id': productId },
+                success: function(response) {
+                    console.log('done');
+                    updateQuantity(form, +1);
+                    updateProductsCount(+1);
+                }
+            });
         });
-    });
 
-    $('.minus-form').submit(function(event) {
-        event.preventDefault();
-        const form = $(this);
-        const url = "/product-minus";
-        const productId = form.find("input[name='product-id']").val();
+        $(".minusProductForm").on("click", function(event) {
+            event.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: { "product-id": productId },
-            success: function(data) {
-
-            }
+            var form = $(this);
+            var productId = form.find("input[name='product-id']").val();
+            $.ajax({
+                type: "POST",
+                url: "/product-minus",
+                data: { 'product-id': productId },
+                success: function(response) {
+                    console.log('done');
+                    updateQuantity(form, -1);
+                    updateProductsCount(-1);
+                }
+            });
         });
-    });
 
+        function updateQuantity(form, change) {
+            var currentQuantity = parseInt(form.closest('.card').find(".product-quantity").text());
+            var newQuantity = Math.max(currentQuantity + change, 0);
+            form.closest('.card').find(".product-quantity").text(newQuantity);
+        }
+
+        function updateProductsCount(change) {
+            var currentCount = parseInt($('.product-quantity').text());
+            var newCount = Math.max(currentCount + change, 0);
+            $('.product-quantity').text(newCount);
+        }
+    });
 </script>
 <style>/* BASE STYLING */
     :root {

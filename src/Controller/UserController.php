@@ -3,8 +3,10 @@ namespace Controller;
 use JetBrains\PhpStorm\NoReturn;
 use Model\User;
 use PDOException;
+use Request\LoginRequest;
 use Request\Request;
 use Service\Service;
+use Service\SessionAutenticationService;
 use Request\RegistrationRequest;
 class UserController
 {
@@ -12,15 +14,14 @@ class UserController
     {
         require_once './../View/get_registrate.phtml';
     }
-    public function postRegistrate(): void
+    public function postRegistrate(RegistrationRequest $request): void
     {
         $errors = RegistrationRequest::validate($_POST);
 
         if (empty($errors)) {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
-            $password = $_POST['psw'];
-            $passwordRep = $_POST['psw-repeat'];
+            $name = $request->getName();
+            $email = $request->getEmail();
+            $password = $request->getPassword();
 
             $hash = password_hash($password, PASSWORD_DEFAULT);
             try {
@@ -42,33 +43,32 @@ class UserController
         require_once './../View/get_login.phtml';
     }
 
-    public function postLogin(): void
+    public function postLogin(LoginRequest $request): void
     {
 
-        $errors = [];
+        $errors = $request->validate();
 
-        if (isset($_POST['email'])) {
-            $email = $_POST['email'];
-        }
-        if (isset($_POST['psw'])) {
-            $password = $_POST['psw'];
-        }
+        if (empty($errors)) {
 
-        $user = User::getOneByEmail($email);
+            $email = $request->getEmail();
+            $password = $request->getPassword();
 
-        if (empty($user)) {
-            $errors['email'] = 'Неверный email';
-        } else {
-            if (password_verify($password, $user->getPassword())) {
-                session_start();
-                $_SESSION['user_name'] = $user->getName();
-                $_SESSION['user_email'] = $user->getEmail();
-                $_SESSION['user_id'] = $user->getId();
-                Service::redirect('/main');
+            $user = User::getOneByEmail($email);
+
+            if (empty($user)) {
+                $errors['email'] = 'Неверный email';
             } else {
-                $errors['psw'] = "Неверный пароль";
+                if (password_verify($password, $user->getPassword())) {
+                    session_start();
+                    $_SESSION['user_name'] = $user->getName();
+                    $_SESSION['user_email'] = $user->getEmail();
+                    $_SESSION['user_id'] = $user->getId();
+                    header('Location: /main');
+                } else {
+                    $errors['psw'] = "Неверный пароль";
+                }
             }
+            require_once './../View/get_login.phtml';
         }
-        require_once './../View/get_login.phtml';
     }
 }
