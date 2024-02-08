@@ -38,7 +38,7 @@ class UserProduct extends Model
         $stmt = self::getPdo()->prepare('DELETE FROM user_products WHERE product_id = :productId AND user_id = :userId');
         $stmt->execute(['productId' => $productId, 'userId' => $userId]);
     }
-    public static function getUserProductInfo($productId, $userId): ?UserProduct
+    public static function getUserProduct($productId, $userId): ?UserProduct
     {
         $stmt = self::getPdo()->prepare('SELECT * FROM user_products WHERE product_id = :productId AND user_id = :userId');
         $stmt->execute(['productId' => $productId, 'userId' => $userId]);

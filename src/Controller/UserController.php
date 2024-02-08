@@ -6,14 +6,22 @@ use PDOException;
 use Request\LoginRequest;
 use Request\Request;
 use Service\Service;
-use Service\SessionAutenticationInterface;
+use Service\SessionAuthenticationService;
 use Request\RegistrationRequest;
 class UserController
 {
+    private SessionAuthenticationService $sessionAuthenticationService;
+
+    public function __construct(SessionAuthenticationService $sessionAuthenticationService)
+    {
+        $this->sessionAuthenticationService = $sessionAuthenticationService;
+    }
+
     public function getRegistrate(): void
     {
         require_once './../View/get_registrate.phtml';
     }
+
     public function postRegistrate(RegistrationRequest $request): void
     {
         $errors = RegistrationRequest::validate($_POST);
@@ -30,7 +38,7 @@ class UserController
                 $userModel->addUserData($name, $email, $hash);
 
                 Service::redirect('Location: /login');
-            } catch (PDOException){
+            } catch (PDOException) {
                 $errors['email'] = "Пользователь с таким email уже существует";
             }
 
@@ -55,20 +63,15 @@ class UserController
 
             $user = User::getOneByEmail($email);
 
-            if (empty($user)) {
-                $errors['email'] = 'Неверный email';
+            $result = $this->sessionAuthenticationService->login($password, $email);
+
+            if ($result) {
+                header("Location: /main");
             } else {
-                if (password_verify($password, $user->getPassword())) {
-                    session_start();
-                    $_SESSION['user_name'] = $user->getName();
-                    $_SESSION['user_email'] = $user->getEmail();
-                    $_SESSION['user_id'] = $user->getId();
-                    header('Location: /main');
-                } else {
-                    $errors['psw'] = "Неверный пароль";
-                }
+                $errors['email'] = 'Invalid password or email';
             }
-            require_once './../View/get_login.phtml';
         }
+        require_once './../View/get_login.phtml';
     }
+
 }

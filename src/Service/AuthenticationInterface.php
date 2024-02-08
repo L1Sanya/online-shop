@@ -2,7 +2,9 @@
 
 namespace Service;
 
-interface AutenticationInterface
+use Model\User;
+
+interface AuthenticationInterface
 {
     public function check(): bool;
     public function getCurrentUser(): User|null;

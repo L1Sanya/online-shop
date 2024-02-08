@@ -3,6 +3,7 @@
 use Controller\ProductController;
 use Controller\UserController;
 use Request\Request;
+use Service\SessionAuthenticationService;
 
 class App
 {
@@ -37,15 +38,17 @@ class App
                 $method = $handler['method'];
                 $request = $handler['request'];
 
-                $obj = new $class();
+                $service = new SessionAuthenticationService();
 
-                if (isset($handler['request'])) {
+                $obj = new $class($service);
+
+                if (isset($request)) {
                     $request = new $handler['request']($requestMethod, $requestUri, headers_list(), $_REQUEST);
                 } else {
                     $request = new Request($requestMethod, $requestUri, headers_list(), $_REQUEST);
                 }
-
                 $obj->$method($request);
+
             } else {
                 echo "Метод $requestMethod не поддерживается для адреса $requestUri";
             }

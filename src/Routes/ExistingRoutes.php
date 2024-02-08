@@ -1,7 +1,7 @@
 <?php
 use Controller\ProductController;
 use Controller\UserController;
-use Service\SessionAutenticationInterface;
+use Service\SessionAuthenticationService;
 
 $app->get('/login', UserController::class, 'getLogin');
 $app->post('/login', UserController::class, 'postLogin', \Request\LoginRequest::class);
@@ -9,7 +9,7 @@ $app->post('/login', UserController::class, 'postLogin', \Request\LoginRequest::
 $app->get('/registrate', UserController::class, 'getRegistrate');
 $app->post('/registrate',UserController::class,'postRegistrate', \Request\RegistrationRequest::class);
 
-$app->get('/logout', SessionAutenticationInterface::class, 'logout');
+$app->get('/logout', SessionAuthenticationService::class, 'logout');
 $app->get('/main', ProductController::class,'getCatalog');
 
 $app->get('/cart', ProductController::class, 'getCartProducts');

@@ -3,16 +3,25 @@ namespace Controller;
 use JetBrains\PhpStorm\NoReturn;
 use Model\Product;
 use Model\UserProduct;
+use Request\MinusProductRequest;
+use Request\PlusProductRequest;
+use Request\RemoveProductRequest;
+use Service\AuthenticationInterface;
 use Service\Service;
 use Request\Request;
-use Service\SessionAutenticationInterface;
+use Service\SessionAuthenticationService;
 
 class ProductController
 {
+    private SessionAuthenticationService $sessionAutenticationService;
+    public function __construct(SessionAuthenticationService $sessionAutenticationService)
+    {
+        $this->sessionAutenticationService = $sessionAutenticationService;
+    }
     public function getCatalog(): void
     {
-        SessionAutenticationInterface::check();
-        $userId = $_SESSION['user_id'];
+        $this->checkSession();
+        $userId = $this->sessionAutenticationService->getCurrentUser()->getId();
         $quantity = 0;
 
         $products = Product::getAll();
@@ -22,8 +31,8 @@ class ProductController
     }
     public function getCartProducts(): void
     {
-        SessionAutenticationInterface::check();
-        $userId = $_SESSION['user_id'];
+        $this->checkSession();
+        $userId = $this->sessionAutenticationService->getCurrentUser()->getId();
 
         $cart = UserProduct::getCart($userId);
         $total = 0;
@@ -38,13 +47,13 @@ class ProductController
         require_once './../View/cart.phtml';
 
     }
-    #[NoReturn] public function plus(Request $request): void
+    #[NoReturn] public function plus(PlusProductRequest $request): void
     {
-        SessionAutenticationInterface::check();
-        $productId = $_POST['product-id'];
-        $userId = $_SESSION['user_id'];
+        $this->checkSession();
+        $userId = $this->sessionAutenticationService->getCurrentUser()->getId();
+        $productId = $request->getId();
 
-        $product = UserProduct::getUserProductInfo($productId, $userId);
+        $product = UserProduct::getUserProduct($productId, $userId);
         if (isset($product)) {
             $product->setQuantity($product->getQuantity() + 1);
             $quantity = $product->getQuantity();
@@ -55,13 +64,13 @@ class ProductController
         }
         Service::redirect('/main');
     }
-    #[NoReturn] public function minus(Request $request): void
+    #[NoReturn] public function minus(MinusProductRequest $request): void
     {
-        SessionAutenticationInterface::check();
-        $productId = $_POST['product-id'];
-        $userId = $_SESSION['user_id'];
+        $this->checkSession();
+        $userId = $this->sessionAutenticationService->getCurrentUser()->getId();
+        $productId = $request->getId();
 
-        $product = UserProduct::getUserProductInfo($productId, $userId);
+        $product = UserProduct::getUserProduct($productId, $userId);
         if (isset($product)) {
             $product->setQuantity($product->getQuantity() - 1);
             if ($product->getQuantity() < 1) {
@@ -79,21 +88,29 @@ class ProductController
         $productId = $productInfo->getId();
         $userId = $_SESSION['user_id'];
 
-        $productInCartInfo = userProduct::getUserProductInfo($productId, $userId);
-        if (empty($productInCartInfo)) {
+        $productInCart = userProduct::getUserProduct($productId, $userId);
+        if (empty($productInCart)) {
             return 0;
         } else {
-            return $productInCartInfo->getQuantity();
+            return $productInCart->getQuantity();
         }
     }
-    #[NoReturn] public function removeProductFromCart(): void
+    #[NoReturn] public function removeProductFromCart(RemoveProductRequest $request): void
     {
-        $userId = $_POST['user-id'];
-        $productId = $_POST['product-id'];
+        $userId = $request->getUserId();
+        $productId = $request->getProductId();
 
         UserProduct::deleteProduct($productId, $userId);
 
         Service::redirect('/cart');
+    }
+    public function checkSession(): void
+    {
+        $result = $this->sessionAutenticationService->check();
+
+        if (!$result) {
+            Service::redirect("/login");
+        }
     }
 
 }
