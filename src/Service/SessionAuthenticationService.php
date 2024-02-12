@@ -1,6 +1,5 @@
 <?php
 namespace Service;
-use JetBrains\PhpStorm\NoReturn;
 use Model\User;
 
 class SessionAuthenticationService implements AuthenticationInterface

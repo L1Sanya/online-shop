@@ -60,7 +60,7 @@
                 type: "POST",
                 url: "/product-plus",
                 data: { 'product-id': productId },
-                success: function(response) {
+                success: function() {
                     console.log('done');
                     updateQuantity(form, +1);
                     updateProductsCount(+1);
@@ -77,7 +77,7 @@
                 type: "POST",
                 url: "/product-minus",
                 data: { 'product-id': productId },
-                success: function(response) {
+                success: function() {
                     console.log('done');
                     updateQuantity(form, -1);
                     updateProductsCount(-1);

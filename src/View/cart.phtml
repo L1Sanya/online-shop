@@ -12,31 +12,32 @@
     </div>
 
 
-    <?php foreach ($productsInfo as $productInfo) :?>
+    <?php foreach ($userProducts as $userProduct) :?>
+        <?php $product = $products[$userProduct->getProductId()]; ?>
             <div class="product">
                 <div class="product-image">
-                    <div class="product-title"><?php echo $productInfo->getName(); ?></div> <br>
-                    <img src="<?php echo $productInfo->getImgUrl(); ?>" width="120" height="80" alt="">
+                    <div class="product-title"><?php echo $product->getName(); ?></div> <br>
+                    <img src="<?php echo $product->getImgUrl(); ?>" width="120" height="80" alt="">
                 </div>
                 <div class="product-details">
-                    <p class="product-description"><?php echo $productInfo->getDescription(); ?></p>
+                    <p class="product-description"><?php echo $product->getDescription(); ?></p>
                 </div>
-                <div class="product-price"><?php echo $productInfo->getPrice() . " руб."; ?></div>
+                <div class="product-price"><?php echo $product->getPrice() . " руб."; ?></div>
                 <div class="product-quantity">
-                    <?php echo $this->getProductQuantity($productInfo, $_SESSION['user_id']); ?>
+                    <?php echo $this->getProductQuantity($product, $_SESSION['user_id']); ?>
                 </div>
                 <div class="product-removal">
                     <form action="/remove-product" method="POST">
                         <input type="hidden" value="<?php echo $_SESSION['user_id']; ?>" name="user-id" required>
-                        <input type="hidden" value="<?php echo $productInfo->getId(); ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
+                        <input type="hidden" value="<?php echo $product->getId(); ?>" placeholder="Enter product id" name="product-id" id="product-id" required>
                         <button type="submit" class="remove-product">Remove</button>
                     </form>
 
 
                 </div>
                 <div class="product-line-price">
-                    <?php $total += $productInfo->getPrice() * $this->getProductQuantity($productInfo, $_SESSION['user_id']);
-                    echo $productInfo->getPrice() * $this->getProductQuantity($productInfo, $_SESSION['user_id']); echo ' руб.'; ?>
+                    <?php $total = 0; $total += $product->getPrice() * $this->getProductQuantity($product, $_SESSION['user_id']);
+                    echo $product->getPrice() * $this->getProductQuantity($product, $_SESSION['user_id']); echo ' руб.'; ?>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -50,7 +51,7 @@
 
     <a href="/main" class="goback">Back to Catalog</a>
 
-    <button class="checkout">Checkout</button>
+    <a href="/order" class="checkout">Order</a>
 
 </div>
 </body>

@@ -1,9 +1,8 @@
 <?php
 
-use Controller\ProductController;
-use Controller\UserController;
 use Request\Request;
 use Service\SessionAuthenticationService;
+
 
 class App
 {

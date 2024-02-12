@@ -3,13 +3,13 @@ namespace Model;
 
 class Product extends Model
 {
-    private int $id;
-    private string $name;
-    private string $description;
-    private float $price;
-    private string $img_url;
+    private ?int $id;
+    private ?string $name;
+    private ?string $description;
+    private ?float $price;
+    private ?string $img_url;
 
-    public function __construct(int $id, string $name, string $description, float $price, string $img_url)
+    public function __construct(?int $id, ?string $name, ?string $description, ?float $price, ?string $img_url)
     {
         $this->id = $id;
         $this->name = $name;
@@ -29,15 +29,31 @@ class Product extends Model
         }
         return $data;
     }
-    public static function getOneById($productId): ?Product
+    public static function getOneById($id): ?Product
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM products WHERE id = :productId');
-        $stmt->execute(['productId' => $productId]);
+        $stmt = self::getPdo()->prepare('SELECT * FROM products WHERE id = :id');
+        $stmt->execute(['id' => $id]);
         $data = $stmt->fetch();
         if (empty($data)) {
             return null;
         }
         return new Product ($data['id'], $data['name'], $data['description'], $data['price'], $data['img_url']);
+    }
+    public static function getAllByIds(array $productIds) : ?array
+    {
+        $idsString = implode(", ", $productIds);
+        $stmt = self::getPdo()->query("SELECT * FROM products WHERE id IN ($idsString)");
+        $products = $stmt->fetchAll();
+
+        foreach ($products as $product) {
+            $data[$product['id']] = new Product($product['id'], $product['name'], $product['description'], $product['price'], $product['img_url']);
+        }
+
+        if (empty($data)) {
+            return null;
+        }
+
+        return $data;
     }
     public function getId(): int
     {

@@ -4,8 +4,9 @@ namespace Service;
 
 use Model\User;
 
-class CookieAuthenticateService implements AuthenticationInterface
+class CookieAuthenticationService implements AuthenticationInterface
 {
+    private User $user;
     public function check(): bool
     {
         return isset($_COOKIE['user_id']);

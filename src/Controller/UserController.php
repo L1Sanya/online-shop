@@ -17,12 +17,12 @@ class UserController
         $this->sessionAuthenticationService = $sessionAuthenticationService;
     }
 
-    public function getRegistrate(): void
+    public function getRegistration(): void
     {
-        require_once './../View/get_registrate.phtml';
+        require_once './../View/registrate.phtml';
     }
 
-    public function postRegistrate(RegistrationRequest $request): void
+    public function postRegistration(RegistrationRequest $request): void
     {
         $errors = RegistrationRequest::validate($_POST);
 
@@ -37,18 +37,18 @@ class UserController
                 $userModel = new User();
                 $userModel->addUserData($name, $email, $hash);
 
-                Service::redirect('Location: /login');
+                header('Location: /login');
             } catch (PDOException) {
                 $errors['email'] = "Пользователь с таким email уже существует";
             }
 
         }
-        require_once './../View/get_registrate.phtml';
+        require_once './../View/registrate.phtml';
     }
 
     public function getLogin(): void
     {
-        require_once './../View/get_login.phtml';
+        require_once './../View/login.phtml';
     }
 
     public function postLogin(LoginRequest $request): void
@@ -71,7 +71,11 @@ class UserController
                 $errors['email'] = 'Invalid password or email';
             }
         }
-        require_once './../View/get_login.phtml';
+        require_once './../View/login.phtml';
+    }
+    public function getOrder(): void
+    {
+        require_once './../View/order.phtml';
     }
 
 }
