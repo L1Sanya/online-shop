@@ -2,60 +2,85 @@
 
 namespace Controller;
 
-use JetBrains\PhpStorm\NoReturn;
 use Model\Product;
 use Model\UserProduct;
+use Request\MinusProductRequest;
+use Request\PlusProductRequest;
 use Request\RemoveProductRequest;
-use Service\SessionAuthenticationService;
+use Service\Authentication\AuthenticationServiceInterface;
 
 class CartController
 {
-    private SessionAuthenticationService $sessionAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct(SessionAuthenticationService $sessionAuthenticationService)
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
-        $this->sessionAuthenticationService = $sessionAuthenticationService;
-    }
-
-    #[NoReturn] public function removeProductFromCart(RemoveProductRequest $request): void
-    {
-        $userId = $request->getUserId();
-        $productId = $request->getProductId();
-
-        UserProduct::deleteProduct($productId, $userId);
-
-        header('Location: /cart');
+        $this->authenticationService = $authenticationService;
     }
 
     public function getCartProducts(): void
     {
-        $this->checkSession();
-
-        $userId = $this->sessionAuthenticationService->getCurrentUser()->getId();
-        $userProducts = UserProduct::getCart($userId);
-
-        if (!empty($userProducts)) {
-            foreach ($userProducts as $userProduct) {
-                $productIds[] = $userProduct->getProductId();
-            }
-
-            $products = Product::getAllByIds($productIds);
+        if (!$this->authenticationService->check()) {
+            header('Location: /login');
         }
-        require_once './../View/cart.phtml';
 
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user) {
+            header('Location: /login');
+        }
+
+        $userId = $user->getId();
+        $userProducts = UserProduct::getCartProductsByUserId($userId);
+
+        $products = Product::getProducts($userId);
+
+        require_once './../View/cart.phtml';
     }
 
-    public function getProductQuantity($productInfo): ?int
+    public function plus(PlusProductRequest $request): void
     {
-        $productId = $productInfo->getId();
-        $userId = $_SESSION['user_id'];
-        $productInCart = userProduct::getUserProduct($productId, $userId);
-
-        if (empty($productInCart)) {
-            return 0;
-        } else {
-            return $productInCart->getQuantity();
+        if (!$this->authenticationService->check()) {
+            header('Location: /login');
         }
+
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user) {
+            header('Location: /login');
+        }
+
+        $userProduct = UserProduct::getUserProduct($request->getId(), $user->getId());
+        if (isset($userProduct)) {
+            $userProduct->incrementQuantity();
+        } else {
+            UserProduct::create($user->getId(), $request->getId(), 1);
+        }
+
+        header('Location: /main');
+    }
+
+    public function minus(MinusProductRequest $request): void
+    {
+        if (!$this->authenticationService->check()) {
+            header('Location: /login');
+        }
+
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user) {
+            header('Location: /login');
+        }
+
+        $userProduct = UserProduct::getUserProduct($request->getId(), $user->getId());
+        $userProduct->decrementQuantity();
+
+        header('Location: /main');
+    }
+
+    public function removeProductFromCart(RemoveProductRequest $request): void
+    {
+        $userProduct = UserProduct::getUserProduct($request->getProductId(), $request->getUserId());
+        $userProduct->destroy();
+
+        header('Location: /cart');
     }
 
     private function checkSession(): void

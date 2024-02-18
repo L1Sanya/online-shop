@@ -31,3 +31,4 @@ services:
       - POSTGRES_PASSWORD=2612
       - POSTGRES_USER=alex
       - POSTGRES_DB=testdb
+      - POSTGRES_HOST=localhost

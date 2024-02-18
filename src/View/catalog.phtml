@@ -1,50 +1,58 @@
 <body>
-<!-- PEN CONTENT -->
-<div class="content">
-    <div class="content-row">
-        <?php foreach ($products as $product) : ?>
-        <div class="card m3">
-            <div class="logo"></div>
-            <img class="card-img-top" src="<?php echo $product->getImgUrl(); ?>" alt="Card image"  width="400"
-                 height="500">
-            <div class="car"></div>
-            <div class="title">
-                <h1><a href="#"><h5 class="card-title"><?php echo $product->getName(); ?></h5></a></h1>
-                <p class="card-text text-muted"><?php echo $product->getDescription(); ?></p>
-            </div>
-            <div class="spec-container">
-                <div class="transmission">
-                    <p><?php echo "{$product->getPrice()} руб."; ?><p>
-                </div>
-                <div class="acceleration">
-                    <p class="card-text text-muted"><?php echo $product->getDescription(); ?></p>
-                </div>
-                <div class="gasoline">
-                    <svg aria-hidden="true" width="100%" height="100%" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    </svg>
-                </div>
+<div class="container">
+
+    <h3><?php use Model\UserProduct; ?>
+
+    <form action="/logout" method="POST">
+        <button type="submit" class="buttons">Log Out</button>
+    </form>
+
+    <div class="cart-wrapper">
+        <div class="cart-handle">
+            <div class="cart-body">
+                <a href="/cart"><span class="cart-items">Cart </span><?php echo $productsCount; ?></a>
             </div>
         </div>
-            <div class="controls">
-                <div> Количество: <span class="product-quantity"><?php echo $quantity = $this->getProductQuantity($product, $_SESSION['user_id']); ?></span></div>
+    </div>
 
-                <form method="POST" class="plusProductForm">
-                    <input type="hidden" value="<?php echo $product->getId(); ?>" name="product-id">
-                    <button type="button" class="buttons plus">+</button>
-                </form>
+    <h3>Product Catalog</h3>
 
-                <form method="POST" class="minusProductForm">
-                    <input type="hidden" value="<?php echo $product->getId(); ?>" name="product-id">
-                    <button type="button" class="buttons minus">-</button>
-                </form>
+    <br>
+    <div class="card-deck">
+        <?php foreach ($products as $product) : ?>
+
+            <div class="card text-center">
+                <a href="#">
+                    <img class="card-img-top" src="<?php echo $product->getImgUrl(); ?>" alt="Card image" width="250" height="190">
+                    <div class="card-body">
+                        <p class="card-text text-muted"><?php echo $product->getDescription(); ?></p>
+                        <a href="#"><h5 class="card-title"><?php echo $product->getName(); ?></h5></a>
+                        <div class="card-footer">
+                            <?php echo $product->getPrice() . " руб."; ?>
+                        </div>
+                    </div>
+                </a>
+
+                <div class="controls">
+                    <div> Количество: <span class="product-quantity"><?php echo UserProduct::getUserProductQuantity($product->getId(), $user->getId()) ?? 0; ?></span></div>
+
+                    <form method="POST" class="plusProductForm">
+                        <input type="hidden" value="<?php echo $product->getId(); ?>" name="product-id">
+                        <button type="button" class="buttons plus">+</button>
+                    </form>
+
+                    <form method="POST" class="minusProductForm">
+                        <input type="hidden" value="<?php echo $product->getId(); ?>" name="product-id">
+                        <button type="button" class="buttons minus">-</button>
+                    </form>
+                </div>
             </div>
-        <br>
+            <br>
+            <br>
+
         <?php endforeach; ?>
     </div>
 </div>
-<!-- BRAND -->
-<p <p><a style="position: absolute; left: 1700px; top: 20px;" href="/logout">LOGOUT</a></p></p>
-<p <p><a style="position: absolute; left: 1500px; top: 20px;" href="/cart">Cart</a></p></p>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -98,261 +106,146 @@
         }
     });
 </script>
-<style>/* BASE STYLING */
-    :root {
-        --col-bg: 20,20,20;
-        --col-fg-p: 0,102,177;
-        --col-fg-p2: 0,61,120;
-        --col-fg-p3: 226,39,24;
-        --col-fg-s: 184,171,143;
-        --col-text: 120,120,120;
-    }
-
+<style>
     body {
-        height: 100vh;
-        width: 100vw;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
         margin: 0;
         padding: 0;
-
-        display: grid;
-        place-items: center;
-        background-color: rgb(var(--col-bg));
-        color: rgb(var(--col-text));
-        font-family: system-ui;
-        overflow-x: hidden;
     }
 
-    /* width */
-    body::-webkit-scrollbar {
-        width: 13px;
-        background: rgb(var(--col-bg));
-    }
-    /* Track */
-    body::-webkit-scrollbar-track {
-        background: rgb(var(--col-bg));
-        background-clip: padding-box;
-        width: 8px;
-        margin-top: 30px;
-        margin-bottom: 5px;
-    }
-    /* Handle */
-    body::-webkit-scrollbar-thumb {
-        background-color: rgb(60, 70, 100);
-        border-radius: 100px;
-        border: 3px solid rgba(0,0,0,0);
-        background-clip: padding-box;
-        margin-top: 30px;
-        margin-bottom: 5px;
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
     }
 
-    .bname {
-        position: absolute;
-        top: 1%;
-        right: 1%;
-        font-variant: all-small-caps;
-        letter-spacing: 2px;
-        color: rgb(var(--col-fg-p));
-        font-weight: 600;
-        font-size: 13px;
-        margin: 0;
-        font-style: italic;
+    h3 {
+        font-size: 24px;
+        color: #333;
     }
 
-    .bname .darkblue {
-        color: rgb(var(--col-fg-p2));
+    .buttons {
+        background-color: #2E64FE;
+        color: #fff;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
     }
 
-    .bname .red {
-        color: rgb(var(--col-fg-p3));
-    }
-
-    /* PEN CONTENT STYLING */
-
-    .content {
-        text-align: center;
-    }
-
-    .content-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        width: 100vw;
-        place-items: center;
-        margin-top: 40px;
-    }
-
-    @media screen and (max-width:1600px) {
-        .content-row {
-            grid-template-columns: repeat(2,1fr);
-        }
-    }
-
-    @media screen and (max-width:1000px) {
-        .content-row {
-            grid-template-columns: repeat(1,1fr);
-        }
-    }
-
-    .card {
-        max-height: 500px;
-        height: 80vh;
-        aspect-ratio: 10 / 16;
-        position: relative;
-        border-radius: 2px;
-        transform-style: preserve-3d;
-        transition: rotate ease 400ms;
-        margin-bottom: 6vh;
-    }
-
-    .card::before {
-        content: "";
-        border-radius: 2px;
-        position: absolute;
-        inset: 0;
-        z-index: 100;
-        background-image: radial-gradient(circle, transparent 10px, black);
-        opacity: 0;
-        transition: opacity 400ms;
-    }
-
-    .card:hover::before {
-        opacity: 1;
-    }
-
-    .card::after {
-        content: "";
-        border-radius: 2px;
-        position: absolute;
-        inset: 80% 0.5rem 0.5rem;
-        translate: 0;
-        transform: translateZ(-100px);
-        background: black;
-        filter: blur(1rem);
-        z-index: 1;
-        transition: rotate 300ms, translate 300ms;
-    }
-
-    .card:hover::after {
-        rotate: x calc(35deg * -1);
-        translate: 0 60px;
-    }
-
-    .card:hover {
-        rotate: x 35deg;
-    }
-
-    .card:hover .content-row {
-        transform: perspective(900px);
-    }
-
-    .background {
-        position: absolute;
-        z-index: 10;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        object-position: -350px center;
-    }
-
-    .logo, .car, .title {
-        position: absolute;
-    }
-
-    .car {
-        opacity: 0;
-        background-position: center;
-        transform-origin: bottom;
-        z-index: 100;
-        transition: 600ms;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-    }
-
-    .card:hover .car {
-        opacity: 1;
-        rotate: x calc(35deg * -1);
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -55%) translateZ(-10px);
-    }
-
-
-
-    .card:hover .spec-container {
-        opacity: 1;
-        transition: 300ms;
-        transition-delay: 700ms;
-    }
-
-    .card:hover .logo {
-        transform: translateY(-2.5rem) translateZ(20px);
-        rotate: x calc(35deg * -1);
-        transition: 300ms;
-        transition-delay: 400ms;
-    }
-
-    .title {
-        z-index: 1000;
-        width: 65%;
-        margin-inline: auto;
-        inset: auto 0 1rem;
-        transform: translateY(0rem) translateZ(20px);
-        transition: 600ms;
-    }
-
-    .card:hover .title {
-        transform: translateY(-1.5rem) translateZ(20px);
-        rotate: x calc(35deg * -1);
-    }
-
-    .title h1 {
-        font-weight: 400;
-        letter-spacing: 4px;
-        font-size: 30px;
-        transition: 200ms ease;
-    }
-
-    .card:hover .title h1 {
-        font-size: 33px;
-    }
-
-    .title p, .title h1 {
-        margin: 0;
-        padding: 0;
-        color: white;
-    }
-
-    .spec-container {
-        position: absolute;
-        z-index: 1000;
-        bottom: -15%;
-        right: -120%;
-        transform: translate(-50%, -50%);
-        rotate: x calc(35deg * -1);
-        transition: 100ms;
-        transition-delay: 0;
-        opacity: 0;
-    }
-
-    .spec-container div svg path {
-        fill: white;
-    }
-
-    .spec-container div svg {
-        height: 40px;
-        width: min-content;
-    }
-
-    .transmission, .acceleration, .gasoline {
+    .cart-wrapper {
         display: flex;
         align-items: center;
     }
 
-    .transmission p, .acceleration p, .gasoline p {
-        width: 100px;
-        text-align: left;
-        color: white;
-        margin: 0;
-        font-weight: 100;
-    }</st>
+    .cart-handle {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .cart-handle a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    .cart-handle a:hover {
+        text-decoration: none;
+        color: #2E64FE;
+    }
+
+    .cart-body {
+        margin-right: 20px;
+    }
+
+    .cart-hole1, .cart-hole2 {
+        width: 10px;
+        height: 10px;
+        background-color: #333;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 4px;
+    }
+
+    .cart-items {
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #2E64FE;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .card-deck {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 20px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .card:hover {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .card img {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .card-body {
+        padding: 10px 0;
+    }
+
+    .card-text {
+        font-size: 14px;
+        color: #777;
+    }
+
+    .card-title {
+        font-size: 18px;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .card-title:hover {
+        color: #2E64FE;
+    }
+
+    .card-footer {
+        font-weight: bold;
+        font-size: 20px;
+        color: #2E64FE;
+    }
+
+    .controls {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .product-quantity {
+        font-size: 16px;
+        margin-right: 10px;
+    }
+
+    .buttons {
+        background-color: #2E64FE;
+        color: #fff;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .buttons:hover {
+        background-color: #1E90FF;
+    }
+</style>

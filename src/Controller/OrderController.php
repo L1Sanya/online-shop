@@ -5,40 +5,65 @@ namespace Controller;
 use Model\Product;
 use Model\UserProduct;
 use Request\PlaceOrderRequest;
-use Service\SessionAuthenticationService;
+use Service\Authentication\AuthenticationServiceInterface;
+use Service\OrderService;
 
 class OrderController
 {
-    private SessionAuthenticationService $sessionAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
+    private OrderService $orderService;
 
-    public function __construct(SessionAuthenticationService $sessionAuthenticationService)
+    public function __construct(AuthenticationServiceInterface $authenticationService, OrderService $orderService)
     {
-        $this->sessionAuthenticationService = $sessionAuthenticationService;
+        $this->authenticationService = $authenticationService;
+        $this->orderService = $orderService;
     }
 
     public function getOrderForm(): void
     {
-        $this->checkSession();
+        if (!$this->authenticationService->check()) {
+            header('Location: /login');
+        }
 
-        $userId = $this->sessionAuthenticationService->getCurrentUser()->getId();
-        $userProducts = UserProduct::getCart($userId);
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user) {
+            header('Location: /login');
+        }
+
+        $userId = $user->getId();
+        $userProducts = UserProduct::getCartProductsByUserId($userId);
+        $products = Product::getProducts($userId);
 
         require_once './../View/order.phtml';
     }
 
-    public function OrderFrom(PlaceOrderRequest $request): void
+    public function orderForm(PlaceOrderRequest $request): void
     {
-
-    }
-
-
-    private function checkSession(): void
-    {
-        $result = $this->sessionAuthenticationService->check();
-
-        if (!$result) {
+        if (!$this->authenticationService->check()) {
             header('Location: /login');
         }
-    }
 
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user) {
+            header('Location: /login');
+        }
+
+        $userId = $user->getId();
+        $errors = $request->validate();
+        $userProducts = UserProduct::getCartProductsByUserId($userId);
+
+        if (empty($errors)) {
+            if (!empty($userProducts)) {
+                $this->orderService->create($userId, $request->getName(), $request->getPhone(), $request->getEmail(), $request->getAddress(), $request->getComment());
+
+                header('Location: /main');
+            } else {
+                header('Location: /cart');
+            }
+        } else {
+            $products = Product::getProducts($userId);
+
+            require_once './../View/order.phtml';
+        }
+    }
 }

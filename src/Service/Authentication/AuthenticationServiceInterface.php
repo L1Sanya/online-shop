@@ -1,10 +1,10 @@
 <?php
 
-namespace Service;
+namespace Service\Authentication;
 
 use Model\User;
 
-interface AuthenticationInterface
+interface AuthenticationServiceInterface
 {
     public function check(): bool;
     public function getCurrentUser(): User|null;

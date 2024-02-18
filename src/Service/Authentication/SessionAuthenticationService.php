@@ -1,8 +1,8 @@
 <?php
-namespace Service;
+namespace Service\Authentication;
 use Model\User;
 
-class SessionAuthenticationService implements AuthenticationInterface
+class SessionAuthenticationService implements AuthenticationServiceInterface
 {
     private User $user;
     public function check(): bool

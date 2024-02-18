@@ -5,90 +5,33 @@ use Model\Product;
 use Model\UserProduct;
 use Request\MinusProductRequest;
 use Request\PlusProductRequest;
-use Service\SessionAuthenticationService;
+use Service\Authentication\AuthenticationServiceInterface;
 
 class ProductController
 {
-    private SessionAuthenticationService $sessionAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct(SessionAuthenticationService $sessionAuthenticationService)
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
-        $this->sessionAuthenticationService = $sessionAuthenticationService;
+        $this->authenticationService = $authenticationService;
     }
 
     public function getCatalog(): void
     {
-        $this->checkSession();
-
-        $userId = $this->sessionAuthenticationService->getCurrentUser()->getId();
-        $quantity = 0;
-        $products = Product::getAll();
-
-        require_once './../View/catalog.phtml';
-
-    }
-
-    #[NoReturn] public function plus(PlusProductRequest $request): void
-    {
-        $this->checkSession();
-
-        $userId = $this->sessionAuthenticationService->getCurrentUser()->getId();
-        $productId = $request->getId();
-        $product = UserProduct::getUserProduct($productId, $userId);
-
-        if (isset($product)) {
-            $product->setQuantity($product->getQuantity() + 1);
-            $quantity = $product->getQuantity();
-            $product->save($quantity, $productId, $userId);
-        } else {
-            $quantity = 1;
-
-            UserProduct::createProductInCart($userId, $productId, $quantity);
-        }
-        header('Location: /main');
-    }
-
-    #[NoReturn] public function minus(MinusProductRequest $request): void
-    {
-        $this->checkSession();
-
-        $userId = $this->sessionAuthenticationService->getCurrentUser()->getId();
-        $productId = $request->getId();
-        $product = UserProduct::getUserProduct($productId, $userId);
-
-        if (isset($product)) {
-            $product->setQuantity($product->getQuantity() - 1);
-
-            if ($product->getQuantity() < 1) {
-                UserProduct::deleteProduct($productId, $userId);
-            } else {
-                $quantity = $product->getQuantity();
-                $product->save($quantity, $productId, $userId);
-            }
-        }
-        header('Location: /main');
-    }
-
-    public function checkSession(): void
-    {
-        $result = $this->sessionAuthenticationService->check();
-
-        if (!$result) {
+        if (!$this->authenticationService->check()) {
             header('Location: /login');
         }
-    }
 
-    public function getProductQuantity($productInfo): ?int
-    {
-        $productId = $productInfo->getId();
-        $userId = $_SESSION['user_id'];
-
-        $productInCart = userProduct::getUserProduct($productId, $userId);
-        if (empty($productInCart)) {
-            return 0;
-        } else {
-            return $productInCart->getQuantity();
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user) {
+            header('Location: /login');
         }
+
+        $userId = $user->getId();
+        $products = Product::getAll();
+        $productsCount = UserProduct::getCount($userId);
+
+        require_once './../View/catalog.phtml';
     }
 
 }

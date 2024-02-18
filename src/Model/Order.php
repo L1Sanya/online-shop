@@ -2,59 +2,84 @@
 
 namespace Model;
 
-use DateTime;
-
 class Order extends Model
 {
-    protected ?int $id;
-    protected ?int $userId;
-    protected ?int $totalAmount;
-    protected ?string $address;
-    protected ?string $phone;
-    protected DateTime $orderDate;
-    protected ?string $status;
 
-    public function __construct(?int $id, ?int $userId, ?int $totalAmount, DateTime $orderDate, ?string $status)
+    private int $orderId;
+    private int $orderNumber;
+    private int $userId;
+    private string $userName;
+    private string $phone;
+    private string $email;
+    private string $address;
+    private string $comment;
+
+    public function __construct(int $orderId, int $userId, string $userName, string $phone, string $email, string $address, string $comment)
     {
-        $this->id = $id;
+        $this->orderId = $orderId;
         $this->userId = $userId;
-        $this->totalAmount = $totalAmount;
-        $this->orderDate = $orderDate;
-        $this->status = $status;
+        $this->userName = $userName;
+        $this->phone = $phone;
+        $this->email = $email;
+        $this->address = $address;
+        $this->comment = $comment;
     }
 
-    public  function getAddress(): ?string
+    public function getOrderId(): int
     {
-        return $this->address;
+        return $this->orderId;
     }
 
-    public  function getPhone(): ?string
-    {
-        return $this->phone;
-    }
-
-    public  function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public  function getUserId(): ?int
+    public function getUserId(): int
     {
         return $this->userId;
     }
 
-    public  function getTotalAmount(): ?int
+    public function getUserName(): string
     {
-        return $this->totalAmount;
+        return $this->userName;
     }
 
-    public  function getOrderDate(): DateTime
+    public function getPhone(): string
     {
-        return $this->orderDate;
+        return $this->phone;
     }
 
-    public  function getStatus(): ?string
+    public function getEmail(): string
     {
-        return $this->status;
+        return $this->email;
     }
+
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    public function getComment(): string
+    {
+        return $this->comment;
+    }
+
+    public static function create(int $userId, string $name, string $phone, string $email, string $address, string $comment = null) : string
+    {
+        $orderNumber = uniqid(rand());
+        $stmt = self::getPdo()->prepare('INSERT INTO orders (order_number, user_id, contact_name, phone, email, address, comment) VALUES (:orderNumber, :userId, :name, :phone, :email, :address, :comment) RETURNING id');
+        $stmt->execute(['orderNumber' => $orderNumber, 'userId' => $userId, 'name' => $name, 'phone' => $phone, 'email' => $email, 'address' => $address, 'comment' => $comment]);
+
+        return $stmt->fetchColumn();
+    }
+
+    public static function getLastByUserId(int $userId): ?Order
+    {
+        $stmt = self::getPdo()->prepare('SELECT * FROM orders WHERE user_id = :userId ORDER BY order_id DESC LIMIT 1');
+        $stmt->execute(['userId' => $userId]);
+        $data = $stmt->fetch();
+
+        if (empty($data)) {
+            return null;
+        }
+
+        return new Order($data['order_id'], $data['user_id'], $data['user_name'], $data['phone'], $data['email'], $data['address'], $data['comment']);
+    }
+
 }

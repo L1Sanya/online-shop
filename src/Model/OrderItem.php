@@ -4,43 +4,10 @@ namespace Model;
 
 class OrderItem extends Model
 {
-    protected ?int $id;
-    protected ?int $orderId;
-    protected ?int $productId;
-    protected ?int $quantity;
-    protected ?int $totalPrice;
-
-    public function __construct(?int $id = null, ?int $orderId = null, ?int $productId = null, ?int $quantity = null, ?int $totalPrice = null)
+    public static function create(int $orderId, int $productId, int $quantity, int $totalPrice) : void
     {
-        $this->id = $id;
-        $this->orderId = $orderId;
-        $this->productId = $productId;
-        $this->quantity = $quantity;
-        $this->totalPrice = $totalPrice;
+        $stmt = self::getPdo()->prepare("INSERT INTO order_items (order_id, product_id, quantity, total_price) VALUES (:orderId, :productId, :quantity, :total)");
+        $stmt->execute(['orderId' => $orderId, 'productId' => $productId, 'quantity' => $quantity, 'total' => $totalPrice]);
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getOrderId(): int
-    {
-        return $this->orderId;
-    }
-
-    public function getProductId(): int
-    {
-        return $this->productId;
-    }
-
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function getTotalPrice(): int
-    {
-        return $this->totalPrice;
-    }
 }

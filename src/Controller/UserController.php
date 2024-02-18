@@ -1,28 +1,28 @@
 <?php
 namespace Controller;
-use JetBrains\PhpStorm\NoReturn;
 use Model\User;
 use PDOException;
 use Request\LoginRequest;
-use Request\Request;
-use Service\Service;
-use Service\SessionAuthenticationService;
 use Request\RegistrationRequest;
+use Service\Authentication\AuthenticationServiceInterface;
+use Service\Authentication\SessionAuthenticationService;
+use Service\Service;
+
 class UserController
 {
-    private SessionAuthenticationService $sessionAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct(SessionAuthenticationService $sessionAuthenticationService)
+    public function __construct(AuthenticationServiceInterface $sessionAuthenticationService)
     {
-        $this->sessionAuthenticationService = $sessionAuthenticationService;
+        $this->authenticationService = $sessionAuthenticationService;
     }
 
     public function getRegistration(): void
     {
-        require_once './../View/registrate.phtml';
+        require_once './../View/registration.phtml';
     }
 
-    public function postRegistration(RegistrationRequest $request): void
+    public function registration(RegistrationRequest $request): void
     {
         $errors = RegistrationRequest::validate($_POST);
 
@@ -43,7 +43,7 @@ class UserController
             }
 
         }
-        require_once './../View/registrate.phtml';
+        require_once './../View/registration.phtml';
     }
 
     public function getLogin(): void
@@ -51,7 +51,7 @@ class UserController
         require_once './../View/login.phtml';
     }
 
-    public function postLogin(LoginRequest $request): void
+    public function login(LoginRequest $request): void
     {
 
         $errors = $request->validate();
@@ -63,7 +63,7 @@ class UserController
 
             $user = User::getOneByEmail($email);
 
-            $result = $this->sessionAuthenticationService->login($password, $email);
+            $result = $this->authenticationService->login($password, $email);
 
             if ($result) {
                 header("Location: /main");
@@ -73,9 +73,12 @@ class UserController
         }
         require_once './../View/login.phtml';
     }
-    public function getOrder(): void
+
+    public function logout(): void
     {
-        require_once './../View/order.phtml';
+        $this->authenticationService->logout();
+
+        header('Location: /login');
     }
 
 }

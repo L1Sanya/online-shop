@@ -1,12 +1,18 @@
 <?php
 
+namespace App;
+
 use Request\Request;
-use Service\SessionAuthenticationService;
+use Service\Authentication\AuthenticationServiceInterface;
+use Service\Authentication\SessionAuthenticationService;
+use Service\CartService;
+use Service\OrderService;
 
 
 class App
 {
     private array $routes = [];
+
     public function get(string $url, string $class, string $handler, string $request = null): void
     {
         $this->routes[$url]['GET'] = [
@@ -15,7 +21,8 @@ class App
             'request' => $request
         ];
     }
-    public function post(string $url, string $class, string $handler,string $request = null): void
+
+    public function post(string $url, string $class, string $handler, string $request = null): void
     {
         $this->routes[$url]['POST'] = [
             'class' => $class,
@@ -23,8 +30,10 @@ class App
             'request' => $request
         ];
     }
+
     public function run(): void
     {
+
         $requestUri = $_SERVER['REQUEST_URI'];
         $requestMethod = $_SERVER['REQUEST_METHOD'];
 
@@ -38,8 +47,9 @@ class App
                 $request = $handler['request'];
 
                 $service = new SessionAuthenticationService();
+                $orderService = new OrderService();
 
-                $obj = new $class($service);
+                $obj = new $class($service, $orderService);
 
                 if (isset($request)) {
                     $request = new $handler['request']($requestMethod, $requestUri, headers_list(), $_REQUEST);

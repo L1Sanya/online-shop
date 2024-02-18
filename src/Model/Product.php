@@ -17,43 +17,53 @@ class Product extends Model
         $this->price = $price;
         $this->img_url = $img_url;
     }
-    public static function getAll() : ?array
+    public static function getAll(): ?array
     {
         $stmt = self::getPdo()->query('SELECT * FROM products');
-        $products = $stmt->fetchAll();
-        foreach ($products as $product) {
-            $data[] = new Product($product['id'], $product['name'], $product['description'], $product['price'], $product['img_url']);
-        }
+        $data = $stmt->fetchAll();
+
         if (empty($data)) {
             return null;
         }
-        return $data;
+
+        return static::hydrateAll($data);
     }
-    public static function getOneById($id): ?Product
+
+    public static function getOneById(int $productId): ?Product
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM products WHERE id = :id');
-        $stmt->execute(['id' => $id]);
+        $stmt = self::getPdo()->prepare('SELECT * FROM products WHERE id = :productId');
+        $stmt->execute(['productId' => $productId]);
         $data = $stmt->fetch();
+
         if (empty($data)) {
             return null;
         }
+
         return new Product ($data['id'], $data['name'], $data['description'], $data['price'], $data['img_url']);
     }
-    public static function getAllByIds(array $productIds) : ?array
-    {
-        $idsString = implode(", ", $productIds);
-        $stmt = self::getPdo()->query("SELECT * FROM products WHERE id IN ($idsString)");
-        $products = $stmt->fetchAll();
 
-        foreach ($products as $product) {
-            $data[$product['id']] = new Product($product['id'], $product['name'], $product['description'], $product['price'], $product['img_url']);
-        }
+    public static function getProducts(int $userId) :? array
+    {
+        $sql = "SELECT * FROM products INNER JOIN user_products ON products.id = user_products.product_id WHERE user_products.user_id = :userId";
+        $data = ['userId' => $userId];
+        $stmt = self::prepareExecute($sql, $data);
+        $data = $stmt->fetchAll();
 
         if (empty($data)) {
             return null;
         }
 
-        return $data;
+        return static::hydrateAll($data);
+    }
+
+    private static function hydrateAll(array $data) : array
+    {
+        $result = [];
+        foreach ($data as $product) {
+            $result[$product['id']] = new Product($product['id'], $product['name'], $product['description'], $product['price'], $product['img_url']);
+        }
+
+        return $result;
     }
     public function getId(): int
     {
@@ -78,6 +88,21 @@ class Product extends Model
     public function getImgUrl(): string
     {
         return $this->img_url;
+    }
+
+    protected static function prepareExecute(string $sql, array $data): false|\PDOStatement
+    {
+        $stmt = self::getPDO()->prepare($sql);
+
+        foreach ($data as $param => $value)
+        {
+            $stmt->bindValue(":$param", $value);
+
+        }
+        $stmt->execute();
+
+        return $stmt;
+
     }
 
 }

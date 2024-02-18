@@ -1,10 +1,10 @@
 <?php
 
-namespace Service;
+namespace Service\Authentication;
 
 use Model\User;
 
-class CookieAuthenticationService implements AuthenticationInterface
+class CookieAuthenticationServiceService implements AuthenticationServiceInterface
 {
     private User $user;
     public function check(): bool
