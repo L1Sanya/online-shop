@@ -18,13 +18,13 @@ class User extends Model
 
     public function addUserData(string $name, string $email, string $hash) : void
     {
-        $stmt = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :hash)");
+        $stmt = static::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :hash)");
         $stmt->execute(['name' => $name, 'email' => $email, 'hash' => $hash]);
     }
 
     public static function getOneByEmail($email): ?User
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
+        $stmt = static::getPdo()->prepare('SELECT * FROM users WHERE email = :email');
         $stmt->execute(['email' => $email]);
         $data = $stmt->fetch();
         if (empty($data)) {
@@ -34,7 +34,7 @@ class User extends Model
     }
     public static function getOneById($id): ?User
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM users WHERE id = :id');
+        $stmt = static::getPdo()->prepare('SELECT * FROM users WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch();
         if (empty($data)) {

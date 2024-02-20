@@ -19,7 +19,7 @@ class Product extends Model
     }
     public static function getAll(): ?array
     {
-        $stmt = self::getPdo()->query('SELECT * FROM products');
+        $stmt = static::getPdo()->query('SELECT * FROM products');
         $data = $stmt->fetchAll();
 
         if (empty($data)) {
@@ -31,7 +31,7 @@ class Product extends Model
 
     public static function getOneById(int $productId): ?Product
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM products WHERE id = :productId');
+        $stmt = static::getPdo()->prepare('SELECT * FROM products WHERE id = :productId');
         $stmt->execute(['productId' => $productId]);
         $data = $stmt->fetch();
 

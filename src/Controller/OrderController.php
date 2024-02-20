@@ -37,6 +37,9 @@ class OrderController
         require_once './../View/order.phtml';
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function orderForm(PlaceOrderRequest $request): void
     {
         if (!$this->authenticationService->check()) {

@@ -8,7 +8,8 @@ services:
       - './docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
     depends_on:
       - database
-
+    env_file:
+      - .env
 
 
   nginx:
@@ -28,7 +29,8 @@ services:
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=2612
-      - POSTGRES_USER=alex
-      - POSTGRES_DB=testdb
-      - POSTGRES_HOST=localhost
+      - POSTGRES_PASSWORD={$DB_PASSWORD}
+      - POSTGRES_USER={$DB_USERNAME}
+      - POSTGRES_DB={$DB_DATABASE}
+      - POSTGRES_HOST={$DB_HOST}
+      - POSTGRES_PORT-{$DB_PORT}

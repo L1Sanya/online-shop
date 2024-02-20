@@ -1,0 +1,68 @@
+[2024-02-20 10:41:41] [ERROR] PDOException: SQLSTATE[08006] [7] invalid integer value "dbname=testdb" for connection option "port" in /var/www/html/src/Model/Model.php:28
+Stack trace:
+#0 /var/www/html/src/Model/Model.php(28): PDO->__construct('pgsql:host=data...', 'alex', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/src/Model/Model.php(11): Model\Model::initialize()
+#2 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#3 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#4 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#5 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#6 /var/www/html/src/public/index.php(11): Core\App->run()
+#7 {main}
+[2024-02-20 10:42:13] [ERROR] PDOException: SQLSTATE[08006] [7] invalid integer value "dbname=testdb" for connection option "port" in /var/www/html/src/Model/Model.php:28
+Stack trace:
+#0 /var/www/html/src/Model/Model.php(28): PDO->__construct('pgsql:host=data...', 'alex', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/src/Model/Model.php(11): Model\Model::initialize()
+#2 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#3 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#4 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#5 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#6 /var/www/html/src/public/index.php(11): Core\App->run()
+#7 {main}
+[2024-02-20 11:03:16] [ERROR] PDOException: SQLSTATE[08006] [7] invalid integer value "dbname=testdb" for connection option "port" in /var/www/html/src/Model/Model.php:28
+Stack trace:
+#0 /var/www/html/src/Model/Model.php(28): PDO->__construct('pgsql:host=data...', 'alex', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/src/Model/Model.php(11): Model\Model::initialize()
+#2 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#3 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#4 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#5 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#6 /var/www/html/src/public/index.php(11): Core\App->run()
+#7 {main}
+[2024-02-20 11:05:14] [ERROR] PDOException: SQLSTATE[08006] [7] invalid integer value "dbname=testdb" for connection option "port" in /var/www/html/src/Model/Model.php:31
+Stack trace:
+#0 /var/www/html/src/Model/Model.php(31): PDO->__construct('pgsql:host=data...', 'alex', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/src/Model/Model.php(13): Model\Model::initialize()
+#2 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#3 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#4 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#5 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#6 /var/www/html/src/public/index.php(11): Core\App->run()
+#7 {main}
+[2024-02-20 11:05:14] [ERROR] Error: Typed static property Model\Model::$pdo must not be accessed before initialization in /var/www/html/src/Model/Model.php:16
+Stack trace:
+#0 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#1 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#2 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#3 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#4 /var/www/html/src/public/index.php(11): Core\App->run()
+#5 {main}
+[2024-02-20 11:05:37] [ERROR] PDOException: SQLSTATE[08006] [7] invalid integer value "dbname=testdb" for connection option "port" in /var/www/html/src/Model/Model.php:31
+Stack trace:
+#0 /var/www/html/src/Model/Model.php(31): PDO->__construct('pgsql:host=data...', 'alex', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/src/Model/Model.php(13): Model\Model::initialize()
+#2 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#3 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#4 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#5 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#6 /var/www/html/src/public/index.php(11): Core\App->run()
+#7 {main}
+[2024-02-20 11:05:37] [ERROR] PDOException: SQLSTATE[08006] [7] invalid integer value "dbname=testdb" for connection option "port" in /var/www/html/src/Model/Model.php:31
+Stack trace:
+#0 /var/www/html/src/Model/Model.php(31): PDO->__construct('pgsql:host=data...', 'alex', Object(SensitiveParameterValue), Array)
+#1 /var/www/html/src/Model/Model.php(13): Model\Model::initialize()
+#2 /var/www/html/src/Model/User.php(37): Model\Model::getPdo()
+#3 /var/www/html/src/Service/Authentication/SessionAuthenticationService.php(26): Model\User::getOneById(1)
+#4 /var/www/html/src/Controller/ProductController.php(25): Service\Authentication\SessionAuthenticationService->getCurrentUser()
+#5 /var/www/html/src/Core/App.php(64): Controller\ProductController->getCatalog(Object(Request\Request))
+#6 /var/www/html/src/public/index.php(11): Core\App->run()
+#7 {main}

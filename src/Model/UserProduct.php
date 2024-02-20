@@ -16,7 +16,7 @@ class UserProduct extends Model
     }
     public static function getCartProductsByUserId(int $userId): ?array
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM user_products WHERE user_id = :userId');
+        $stmt = static::getPdo()->prepare('SELECT * FROM user_products WHERE user_id = :userId');
         $stmt->execute(['userId' => $userId]);
         $data = $stmt->fetchAll();
 
@@ -29,7 +29,7 @@ class UserProduct extends Model
 
     public static function getUserProduct(int $productId, int $userId): ?UserProduct
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM user_products WHERE product_id = :productId AND user_id = :userId');
+        $stmt = static::getPdo()->prepare('SELECT * FROM user_products WHERE product_id = :productId AND user_id = :userId');
         $stmt->execute(['productId' => $productId, 'userId' => $userId]);
         $data = $stmt->fetch();
 
@@ -42,7 +42,7 @@ class UserProduct extends Model
 
     public static function getUserProductQuantity(int $productId, int $userId) : ?int
     {
-        $stmt = self::getPdo()->prepare('SELECT quantity FROM user_products WHERE product_id = :productId AND user_id = :userId');
+        $stmt = static::getPdo()->prepare('SELECT quantity FROM user_products WHERE product_id = :productId AND user_id = :userId');
         $stmt->execute(['productId' => $productId, 'userId' => $userId]);
         $data = $stmt->fetch();
 
@@ -55,7 +55,7 @@ class UserProduct extends Model
 
     public static function create(int $userId, int $productId, int $quantity) : void
     {
-        $stmt = self::getPdo()->prepare("INSERT INTO user_products (user_id, product_id, quantity) VALUES (:userId, :productId, :quantity)");
+        $stmt = static::getPdo()->prepare("INSERT INTO user_products (user_id, product_id, quantity) VALUES (:userId, :productId, :quantity)");
         $stmt->execute(['userId' => $userId, 'productId' => $productId, 'quantity' => $quantity]);
     }
 
@@ -68,13 +68,13 @@ class UserProduct extends Model
 
     public function destroy() : void
     {
-        $stmt = self::getPdo()->prepare('DELETE FROM user_products WHERE id = :id');
+        $stmt = static::getPdo()->prepare('DELETE FROM user_products WHERE id = :id');
         $stmt->execute(['id' => $this->id]);
     }
 
     public static function getCount(int $userId) : int
     {
-        $stmt = self::getPdo()->prepare('SELECT SUM(user_products.quantity) FROM user_products WHERE user_products.user_id = :userId');
+        $stmt = static::getPdo()->prepare('SELECT SUM(user_products.quantity) FROM user_products WHERE user_products.user_id = :userId');
         $stmt->execute(['userId' => $userId]);
         $result = $stmt->fetch();
 

@@ -63,7 +63,7 @@ class Order extends Model
     public static function create(int $userId, string $name, string $phone, string $email, string $address, string $comment = null) : string
     {
         $orderNumber = uniqid(rand());
-        $stmt = self::getPdo()->prepare('INSERT INTO orders (order_number, user_id, contact_name, phone, email, address, comment) VALUES (:orderNumber, :userId, :name, :phone, :email, :address, :comment) RETURNING id');
+        $stmt = static::getPdo()->prepare('INSERT INTO orders (order_number, user_id, contact_name, phone, email, address, comment) VALUES (:orderNumber, :userId, :name, :phone, :email, :address, :comment) RETURNING id');
         $stmt->execute(['orderNumber' => $orderNumber, 'userId' => $userId, 'name' => $name, 'phone' => $phone, 'email' => $email, 'address' => $address, 'comment' => $comment]);
 
         return $stmt->fetchColumn();
@@ -71,7 +71,7 @@ class Order extends Model
 
     public static function getLastByUserId(int $userId): ?Order
     {
-        $stmt = self::getPdo()->prepare('SELECT * FROM orders WHERE user_id = :userId ORDER BY order_id DESC LIMIT 1');
+        $stmt = static::getPdo()->prepare('SELECT * FROM orders WHERE user_id = :userId ORDER BY order_id DESC LIMIT 1');
         $stmt->execute(['userId' => $userId]);
         $data = $stmt->fetch();
 

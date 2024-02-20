@@ -20,9 +20,7 @@ class CartController
 
     public function getCartProducts(): void
     {
-        if (!$this->authenticationService->check()) {
-            header('Location: /login');
-        }
+        $this->checkSession();
 
         $user = $this->authenticationService->getCurrentUser();
         if (!$user) {
@@ -39,9 +37,7 @@ class CartController
 
     public function plus(PlusProductRequest $request): void
     {
-        if (!$this->authenticationService->check()) {
-            header('Location: /login');
-        }
+        $this->checkSession();
 
         $user = $this->authenticationService->getCurrentUser();
         if (!$user) {
@@ -60,9 +56,7 @@ class CartController
 
     public function minus(MinusProductRequest $request): void
     {
-        if (!$this->authenticationService->check()) {
-            header('Location: /login');
-        }
+        $this->checkSession();
 
         $user = $this->authenticationService->getCurrentUser();
         if (!$user) {
@@ -85,7 +79,7 @@ class CartController
 
     private function checkSession(): void
     {
-        $result = $this->sessionAuthenticationService->check();
+        $result = $this->authenticationService->check();
 
         if (!$result) {
             header('Location: /login');

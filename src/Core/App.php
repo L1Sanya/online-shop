@@ -1,17 +1,23 @@
 <?php
 
-namespace App;
+namespace Core;
 
+use Core\Container\Container;
 use Request\Request;
-use Service\Authentication\AuthenticationServiceInterface;
-use Service\Authentication\SessionAuthenticationService;
-use Service\CartService;
-use Service\OrderService;
+use Service\LoggerService;
+use Throwable;
 
 
 class App
 {
     private array $routes = [];
+
+    private Container $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     public function get(string $url, string $class, string $handler, string $request = null): void
     {
@@ -46,17 +52,21 @@ class App
                 $method = $handler['method'];
                 $request = $handler['request'];
 
-                $service = new SessionAuthenticationService();
-                $orderService = new OrderService();
-
-                $obj = new $class($service, $orderService);
+                $obj = $this->container->get($class);
 
                 if (isset($request)) {
                     $request = new $handler['request']($requestMethod, $requestUri, headers_list(), $_REQUEST);
                 } else {
                     $request = new Request($requestMethod, $requestUri, headers_list(), $_REQUEST);
                 }
-                $obj->$method($request);
+
+                try {
+                    $obj->$method($request);
+                } catch (Throwable $exception) {
+                    LoggerService::error($exception);
+
+                    require_once './../View/500.html';
+                }
 
             } else {
                 echo "Метод $requestMethod не поддерживается для адреса $requestUri";
@@ -65,5 +75,4 @@ class App
             require_once './../View/404.html';
         }
     }
-
 }
