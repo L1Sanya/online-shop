@@ -6,6 +6,8 @@ class Container implements ContainerInterface
 {
     private array $services;
 
+    private array $instances;
+
     public function set(string $class, callable $callback): void
     {
         $this->services[$class] = $callback;
@@ -13,13 +15,24 @@ class Container implements ContainerInterface
 
     public function get(string $class) : object
     {
+        if (isset($this->instances[$class])) {
+            return $this->instances[$class];
+        }
+
         if (isset($this->services[$class])) {
             $callback = $this->services[$class];
 
-            return $callback();
+            $instance = $callback($this);
+
+            $this->instances[$class] = $instance;
+
+            return $instance;
         }
 
-        return new $class();
-    }
+        $instance = new $class();
 
+        $this->instances[$class] = $instance;
+
+        return new $instance;
+    }
 }

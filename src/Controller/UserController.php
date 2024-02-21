@@ -5,8 +5,6 @@ use PDOException;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
 use Service\Authentication\AuthenticationServiceInterface;
-use Service\Authentication\SessionAuthenticationService;
-use Service\Service;
 
 class UserController
 {
@@ -22,7 +20,7 @@ class UserController
         require_once './../View/registration.phtml';
     }
 
-    public function registration(RegistrationRequest $request): void
+    public function registration(RegistrationRequest $request)
     {
         $errors = RegistrationRequest::validate($_POST);
 
@@ -43,7 +41,13 @@ class UserController
             }
 
         }
-        require_once './../View/registration.phtml';
+        return [
+            "view" => "login.phtml",
+            "params" => [
+                'errors' => $errors,
+
+            ]
+        ];
     }
 
     public function getLogin(): void

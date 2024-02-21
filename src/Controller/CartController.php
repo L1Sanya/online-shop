@@ -84,5 +84,6 @@ class CartController
         if (!$result) {
             header('Location: /login');
         }
+
     }
 }

@@ -7,6 +7,7 @@ use Model\UserProduct;
 use Request\PlaceOrderRequest;
 use Service\Authentication\AuthenticationServiceInterface;
 use Service\OrderService;
+use Throwable;
 
 class OrderController
 {
@@ -21,9 +22,7 @@ class OrderController
 
     public function getOrderForm(): void
     {
-        if (!$this->authenticationService->check()) {
-            header('Location: /login');
-        }
+        $this->checkSession();
 
         $user = $this->authenticationService->getCurrentUser();
         if (!$user) {
@@ -38,13 +37,11 @@ class OrderController
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function orderForm(PlaceOrderRequest $request): void
     {
-        if (!$this->authenticationService->check()) {
-            header('Location: /login');
-        }
+        $this->checkSession();
 
         $user = $this->authenticationService->getCurrentUser();
         if (!$user) {
@@ -67,6 +64,15 @@ class OrderController
             $products = Product::getProducts($userId);
 
             require_once './../View/order.phtml';
+        }
+    }
+
+    private function checkSession(): void
+    {
+        $result = $this->authenticationService->check();
+
+        if (!$result) {
+            header('Location: /login');
         }
     }
 }

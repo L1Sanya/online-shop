@@ -1,34 +1,23 @@
 <?php
 namespace Model;
 use PDO;
+use PDOStatement;
+
 class Model
 {
     protected static PDO $pdo;
 
-    public static function getPdo() : PDO
+    public static function initialize(PDO $pdo): void
     {
-        if (!isset(static::$pdo)){
-            static::initialize();
-        }
-
-        return static::$pdo;
+        static::$pdo = $pdo;
     }
 
-    public static function initialize() : void
+    public static function getPDO() : PDO
     {
-        $host = getenv('DB_HOST');
-        $dbname = getenv('DB_DATABASE');
-        $username= getenv('DB_USERNAME');
-        $password = getenv('DB_PASSWORD');
-        $port = getenv('DB_PORT');
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ];
-
-        static::$pdo = new PDO("pgsql:host=$host; port=$port; dbname=$dbname", "$username", "$password", $options);
+        return self::$pdo;
     }
 
-    protected static function prepareExecute(string $sql, array $data): false|\PDOStatement
+    protected static function prepareExecute(string $sql, array $data): false|PDOStatement
     {
         $stmt = static::getPDO()->prepare($sql);
 

@@ -7,19 +7,24 @@ use Model\Order;
 use Model\OrderItem;
 use Model\Product;
 use Model\UserProduct;
+use PDO;
 use Throwable;
 
 class OrderService
 {
-    /**
-     * @throws Throwable
-     */
-    public function create(int $userId, string $name, string $phone, string $email, string $address, string $comment): void
+    private PDO $pdo;
+
+    public function __construct(PDO $pdo)
     {
-        $pdo = Model::getPdo();
+        $this->pdo = $pdo;
+    }
+
+    public function create(int $userId, string $name, string $phone, string $email, string $address, string $comment): bool
+    {
+
         $products = Product::getProducts($userId);
         $userProducts = UserProduct::getCartProductsByUserId($userId);
-        $pdo->beginTransaction();
+        $this->pdo->beginTransaction();
         try {
             $orderId = Order::create($userId, $name, $phone, $email, $address, $comment);
 
@@ -31,12 +36,15 @@ class OrderService
 
                 OrderItem::create($orderId, $productId, $quantity, $total);
             }
-            $pdo->commit();
+            $this->pdo->commit();
+
+            return true;
         } catch (Throwable $exception) {
-            $pdo->rollBack();
+            $this->pdo->rollBack();
             LoggerService::error($exception);
 
             require_once "./../View/500.html";
         }
+        return false;
     }
 }
