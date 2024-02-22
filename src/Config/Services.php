@@ -5,6 +5,7 @@ use Controller\CartController;
 use Controller\OrderController;
 use Controller\ProductController;
 use Controller\UserController;
+use Core\ViewRenderer;
 use Service\Authentication\AuthenticationServiceInterface;
 use Service\Authentication\SessionAuthenticationService;
 use Service\OrderService;
@@ -17,31 +18,36 @@ $container->set(AuthenticationServiceInterface::class, function () {
 
 $container->set(UserController::class, function (Container $container) {
     $authenticationService = $container->get(AuthenticationServiceInterface::class);
+    $viewRenderer = $container->get(ViewRenderer::class);
 
-    return new UserController($authenticationService);
+    return new UserController($authenticationService, $viewRenderer);
 });
 
 $container->set(ProductController::class, function (Container $container) {
     $authenticationService = $container->get(AuthenticationServiceInterface::class);
+    $viewRenderer = $container->get(ViewRenderer::class);
 
-    return new ProductController($authenticationService);
+    return new ProductController($authenticationService, $viewRenderer);
 });
 
 $container->set(OrderController::class, function (Container $container) {
     $authenticationService = $container->get(AuthenticationServiceInterface::class);
     $orderService = $container->get(OrderService::class);
+    $viewRenderer = $container->get(ViewRenderer::class);
 
-    return new OrderController($authenticationService, $orderService);
+    return new OrderController($authenticationService, $orderService, $viewRenderer);
 });
 
 $container->set(CartController::class, function (Container $container) {
     $authenticationService = $container->get(AuthenticationServiceInterface::class);
+    $viewRenderer = $container->get(ViewRenderer::class);
 
-    return new CartController($authenticationService);
+    return new CartController($authenticationService, $viewRenderer);
 });
 
-$container->set(OrderService::class, function () {
-    return new OrderService();
+$container->set(OrderService::class, function (Container $container) {
+    $pdo = $container->get(PDO::class);
+    return new OrderService($pdo);
 });
 
 $container->set(PDO::class, function () {

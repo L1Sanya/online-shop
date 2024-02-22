@@ -1,14 +1,16 @@
 <?php
 namespace Model;
 
-class User extends Model
-{
-    private int $id;
-    private string $name;
-    private string $email;
-    private string $password;
+use JsonSerializable;
 
-    public function __construct(int $id, string $name, string $email, string $password)
+class User extends Model implements JsonSerializable
+{
+    private ?int $id;
+    private ?string $name;
+    private ?string $email;
+    private ?string $password;
+
+    public function __construct(?int $id = null, ?string $name = null, ?string $email = null, ?string $password = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -42,6 +44,29 @@ class User extends Model
         }
         return new User($data['id'], $data['name'], $data['email'], $data['password']);
     }
+
+    public static function getAll(): ?User
+    {
+        $stmt = self::getPdo()->query('SELECT * FROM users');
+        $data = $stmt->fetchAll();
+
+        if (empty($data)) {
+            return null;
+        }
+
+        return new User($data['id'], $data['name'], $data['email'], $data['password']);
+    }
+
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => $this->password,
+        ];
+    }
+
     public function getId(): int
     {
         return $this->id;

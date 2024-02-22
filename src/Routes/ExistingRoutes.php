@@ -23,3 +23,7 @@ $app->post('/remove-product', CartController::class, 'removeProductFromCart');
 
 $app->get('/order', OrderController::class, 'getOrderForm');
 $app->post('/order', OrderController::class, 'orderForm', PlaceOrderRequest::class);
+
+
+
+$app->get('/api/users', \Controller\Api\UserController::class, 'index');

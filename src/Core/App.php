@@ -71,16 +71,7 @@ class App
                 try {
                     $response = $obj->$method($request);
 
-                    if (is_array($response) && isset($response['view'])) {
-                        $view = $response['view'];
-                        $params = $response['params'] ?? [];
-
-                        extract($params);
-
-                        require_once "./../View/$view";
-                    } else {
-                        echo json_encode($response);
-                    }
+                    echo $response;
                 } catch (Throwable $exception) {
                     LoggerService::error($exception);
 

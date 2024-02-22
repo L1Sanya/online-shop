@@ -1,22 +1,17 @@
 <?php
 namespace Controller;
-use JetBrains\PhpStorm\NoReturn;
+use Core\ViewRenderer;
 use Model\Product;
 use Model\UserProduct;
-use Request\MinusProductRequest;
-use Request\PlusProductRequest;
 use Service\Authentication\AuthenticationServiceInterface;
+use Traits\ControllerTrait;
 
 class ProductController
 {
-    private AuthenticationServiceInterface $authenticationService;
+    use ControllerTrait;
 
-    public function __construct(AuthenticationServiceInterface $authenticationService)
-    {
-        $this->authenticationService = $authenticationService;
-    }
 
-    public function getCatalog(): void
+    public function getCatalog(): string
     {
         if (!$this->authenticationService->check()) {
             header('Location: /login');
@@ -31,7 +26,12 @@ class ProductController
         $products = Product::getAll();
         $productsCount = UserProduct::getCount($userId);
 
-        require_once './../View/catalog.phtml';
+        return $this->viewRenderer->render('catalog.phtml', [
+            'user' => $user,
+            'products' => $products,
+            'productsCount' => $productsCount,
+                ], true
+        );
     }
 
 }

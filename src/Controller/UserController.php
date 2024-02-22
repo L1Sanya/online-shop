@@ -1,26 +1,23 @@
 <?php
 namespace Controller;
+use Core\ViewRenderer;
 use Model\User;
 use PDOException;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
 use Service\Authentication\AuthenticationServiceInterface;
+use Traits\ControllerTrait;
 
 class UserController
 {
-    private AuthenticationServiceInterface $authenticationService;
+    use ControllerTrait;
 
-    public function __construct(AuthenticationServiceInterface $sessionAuthenticationService)
+    public function getRegistration(): string
     {
-        $this->authenticationService = $sessionAuthenticationService;
+        return $this->viewRenderer->render('registration.phtml', [], true);
     }
 
-    public function getRegistration(): void
-    {
-        require_once './../View/registration.phtml';
-    }
-
-    public function registration(RegistrationRequest $request)
+    public function registration(RegistrationRequest $request) : string
     {
         $errors = RegistrationRequest::validate($_POST);
 
@@ -41,21 +38,15 @@ class UserController
             }
 
         }
-        return [
-            "view" => "login.phtml",
-            "params" => [
-                'errors' => $errors,
-
-            ]
-        ];
+        return $this->viewRenderer->render('registration.phtml', ['errors' => $errors], true);
     }
 
-    public function getLogin(): void
+    public function getLogin(): string
     {
-        require_once './../View/login.phtml';
+        return $this->viewRenderer->render('login.phtml', [], true);
     }
 
-    public function login(LoginRequest $request): void
+    public function login(LoginRequest $request): string
     {
 
         $errors = $request->validate();
@@ -75,7 +66,7 @@ class UserController
                 $errors['email'] = 'Invalid password or email';
             }
         }
-        require_once './../View/login.phtml';
+        return $this->viewRenderer->render('login.phtml', ['errors' => $errors], true);
     }
 
     public function logout(): void

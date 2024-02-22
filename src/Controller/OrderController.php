@@ -2,25 +2,28 @@
 
 namespace Controller;
 
+use Core\ViewRenderer;
 use Model\Product;
 use Model\UserProduct;
 use Request\PlaceOrderRequest;
 use Service\Authentication\AuthenticationServiceInterface;
 use Service\OrderService;
 use Throwable;
+use Traits\ControllerTrait;
 
 class OrderController
 {
-    private AuthenticationServiceInterface $authenticationService;
+    use ControllerTrait;
     private OrderService $orderService;
 
-    public function __construct(AuthenticationServiceInterface $authenticationService, OrderService $orderService)
+    public function __construct(AuthenticationServiceInterface $authenticationService, OrderService $orderService, ViewRenderer $viewRenderer)
     {
         $this->authenticationService = $authenticationService;
+        $this->viewRenderer = $viewRenderer;
         $this->orderService = $orderService;
     }
 
-    public function getOrderForm(): void
+    public function getOrderForm(): string
     {
         $this->checkSession();
 
@@ -33,13 +36,17 @@ class OrderController
         $userProducts = UserProduct::getCartProductsByUserId($userId);
         $products = Product::getProducts($userId);
 
-        require_once './../View/order.phtml';
+        return $this->viewRenderer->render('order.phtml', [
+                'userProducts' => $userProducts,
+                'products' => $products,
+            ], true
+        );
     }
 
     /**
      * @throws Throwable
      */
-    public function orderForm(PlaceOrderRequest $request): void
+    public function orderForm(PlaceOrderRequest $request): string
     {
         $this->checkSession();
 
@@ -54,18 +61,24 @@ class OrderController
 
         if (empty($errors)) {
             if (!empty($userProducts)) {
-                $this->orderService->create($userId, $request->getName(), $request->getPhone(), $request->getEmail(), $request->getAddress(), $request->getComment());
-
-                header('Location: /main');
+                $result = $this->orderService->create($userId, $request->getName(), $request->getPhone(), $request->getEmail(), $request->getAddress(), $request->getComment());
+                if ($result) {
+                    header('Location: /main');
+                }
+                return $this->viewRenderer->render('500.html', [], false);
             } else {
                 header('Location: /cart');
             }
         } else {
             $products = Product::getProducts($userId);
-
-            require_once './../View/order.phtml';
-        }
+            }
+        return $this->viewRenderer->render('order.phtml', [
+                'userProducts' => $userProducts,
+                'products' => $products,
+            ], true
+        );
     }
+
 
     private function checkSession(): void
     {

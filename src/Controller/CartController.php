@@ -2,23 +2,21 @@
 
 namespace Controller;
 
+use Core\ViewRenderer;
 use Model\Product;
 use Model\UserProduct;
 use Request\MinusProductRequest;
 use Request\PlusProductRequest;
 use Request\RemoveProductRequest;
 use Service\Authentication\AuthenticationServiceInterface;
+use Traits\ControllerTrait;
 
 class CartController
 {
-    private AuthenticationServiceInterface $authenticationService;
+    use ControllerTrait;
 
-    public function __construct(AuthenticationServiceInterface $authenticationService)
-    {
-        $this->authenticationService = $authenticationService;
-    }
 
-    public function getCartProducts(): void
+    public function getCartProducts(): array|string
     {
         $this->checkSession();
 
@@ -32,7 +30,12 @@ class CartController
 
         $products = Product::getProducts($userId);
 
-        require_once './../View/cart.phtml';
+        return $this->viewRenderer->render('cart.phtml', [
+                'user' => $user,
+                'userProducts' => $userProducts,
+                'products' => $products
+            ], true
+        );
     }
 
     public function plus(PlusProductRequest $request): void
