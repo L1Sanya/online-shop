@@ -2,6 +2,7 @@
 namespace Model;
 
 use JsonSerializable;
+use l1sanya\MyCore\Model\Model;
 
 class User extends Model implements JsonSerializable
 {

@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use l1sanya\MyCore\Model\Model;
+
 class Order extends Model
 {
 

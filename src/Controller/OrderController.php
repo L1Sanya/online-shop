@@ -2,11 +2,11 @@
 
 namespace Controller;
 
-use Core\ViewRenderer;
+use Core\src\AuthenticationServiceInterface;
+use Core\src\ViewRenderer;
 use Model\Product;
 use Model\UserProduct;
 use Request\PlaceOrderRequest;
-use Service\Authentication\AuthenticationServiceInterface;
 use Service\OrderService;
 use Throwable;
 use Traits\ControllerTrait;

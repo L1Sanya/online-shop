@@ -1,8 +1,8 @@
 version: '3'
 services:
-  php:
+  php-fpm:
     build:
-      context: docker/php
+      context: ./docker/php
     volumes:
       - '.:/var/www/html'
       - './docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
@@ -15,17 +15,17 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - 80:80
+      - "80:80"
     volumes:
       - '.:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
     depends_on:
-      - php
+      - php-fpm
 
   database:
     image: postgres:14.10
     ports:
-      - 5433:5432
+      - "5432:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     environment:
@@ -33,4 +33,4 @@ services:
       - POSTGRES_USER={$DB_USERNAME}
       - POSTGRES_DB={$DB_DATABASE}
       - POSTGRES_HOST={$DB_HOST}
-      - POSTGRES_PORT-{$DB_PORT}
+      - POSTGRES_PORT={$DB_PORT}

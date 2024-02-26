@@ -1,7 +1,7 @@
 <?php
 
-use Core\App;
-use Core\Autoloader;
+use l1sanya\MyCore\App;
+use l1sanya\MyCore\Autoloader;
 
 require_once "./../Core/Autoloader.php";
 

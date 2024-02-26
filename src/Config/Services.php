@@ -1,12 +1,12 @@
 <?php
 
-use Core\Container\Container;
 use Controller\CartController;
 use Controller\OrderController;
 use Controller\ProductController;
 use Controller\UserController;
-use Core\ViewRenderer;
-use Service\Authentication\AuthenticationServiceInterface;
+use l1sanya\MyCore\AuthenticationServiceInterface;
+use l1sanya\MyCore\Container\Container;
+use l1sanya\MyCore\ViewRenderer;
 use Service\Authentication\SessionAuthenticationService;
 use Service\OrderService;
 

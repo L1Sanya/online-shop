@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use l1sanya\MyCore\Model\Model;
+
 class OrderItem extends Model
 {
     public static function create(int $orderId, int $productId, int $quantity, int $totalPrice) : void

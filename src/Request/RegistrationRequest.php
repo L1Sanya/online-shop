@@ -2,6 +2,8 @@
 
 namespace Request;
 
+use l1sanya\MyCore\Request\Request;
+
 class RegistrationRequest extends Request
 {
     public static function validate(array $userInfo) : array

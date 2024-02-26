@@ -2,6 +2,7 @@
 
 namespace Service\Authentication;
 
+use l1sanya\MyCore\AuthenticationServiceInterface;
 use Model\User;
 
 class CookieAuthenticationServiceService implements AuthenticationServiceInterface
@@ -46,7 +47,6 @@ class CookieAuthenticationServiceService implements AuthenticationServiceInterfa
         if ($this->check())
         {
             setcookie('user_id', $_COOKIE['user_id'], time() - 3600);
-            header('Location: /login');
         }
     }
 }

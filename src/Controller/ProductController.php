@@ -1,9 +1,7 @@
 <?php
 namespace Controller;
-use Core\ViewRenderer;
 use Model\Product;
 use Model\UserProduct;
-use Service\Authentication\AuthenticationServiceInterface;
 use Traits\ControllerTrait;
 
 class ProductController

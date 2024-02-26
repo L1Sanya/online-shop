@@ -2,6 +2,8 @@
 
 namespace Request;
 
+use l1sanya\MyCore\Request\Request;
+
 class PlaceOrderRequest extends Request
 {
 

@@ -2,7 +2,7 @@
 
 namespace Service;
 
-use Model\Model;
+use l1sanya\MyCore\Logger\LoggerService;
 use Model\Order;
 use Model\OrderItem;
 use Model\Product;

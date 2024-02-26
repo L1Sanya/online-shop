@@ -1,5 +1,7 @@
 <?php
+
 namespace Service\Authentication;
+use l1sanya\MyCore\AuthenticationServiceInterface;
 use Model\User;
 
 class SessionAuthenticationService implements AuthenticationServiceInterface

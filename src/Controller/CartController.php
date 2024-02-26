@@ -2,19 +2,16 @@
 
 namespace Controller;
 
-use Core\ViewRenderer;
 use Model\Product;
 use Model\UserProduct;
 use Request\MinusProductRequest;
 use Request\PlusProductRequest;
 use Request\RemoveProductRequest;
-use Service\Authentication\AuthenticationServiceInterface;
 use Traits\ControllerTrait;
 
 class CartController
 {
     use ControllerTrait;
-
 
     public function getCartProducts(): array|string
     {

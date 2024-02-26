@@ -1,11 +1,9 @@
 <?php
 namespace Controller;
-use Core\ViewRenderer;
 use Model\User;
 use PDOException;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
-use Service\Authentication\AuthenticationServiceInterface;
 use Traits\ControllerTrait;
 
 class UserController

@@ -1,6 +1,8 @@
 <?php
 namespace Model;
 
+use l1sanya\MyCore\Model\Model;
+
 class Product extends Model
 {
     private ?int $id;
