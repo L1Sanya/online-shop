@@ -1,16 +1,14 @@
 version: '3'
 services:
-  php-fpm:
+  php:
     build:
-      context: ./docker/php
+      context: docker/php
     volumes:
       - '.:/var/www/html'
-      - './docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
     depends_on:
       - database
     env_file:
       - .env
-
 
   nginx:
     image: nginx:latest
@@ -20,7 +18,7 @@ services:
       - '.:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
     depends_on:
-      - php-fpm
+      - php
 
   database:
     image: postgres:14.10

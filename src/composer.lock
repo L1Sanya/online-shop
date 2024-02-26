@@ -1,0 +1,56 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "db9e184c0534df429e52804fc16230d6",
+    "packages": [
+        {
+            "name": "l1sanya/my-core",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/L1Sanya/my-core.git",
+                "reference": "0314ce923fe328d18837d797d4cf4811b3e9e072"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/L1Sanya/my-core/zipball/0314ce923fe328d18837d797d4cf4811b3e9e072",
+                "reference": "0314ce923fe328d18837d797d4cf4811b3e9e072",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "l1sanya\\MyCore\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Alex",
+                    "email": "lisanya2702@gmail.com"
+                }
+            ],
+            "description": "My first package",
+            "support": {
+                "issues": "https://github.com/L1Sanya/my-core/issues",
+                "source": "https://github.com/L1Sanya/my-core/tree/main"
+            },
+            "time": "2024-02-26T11:12:31+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "l1sanya/my-core": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
+}

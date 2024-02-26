@@ -3,7 +3,7 @@
 use l1sanya\MyCore\App;
 use l1sanya\MyCore\Autoloader;
 
-require_once "./../Core/Autoloader.php";
+require_once './../vendor/autoload.php';
 
 Autoloader::registrate();
 

@@ -1,0 +1,18 @@
+{
+    "name": "alex/src",
+    "autoload": {
+        "psr-4": {
+            "Alex\\Src\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "alex",
+            "email": "dashiev.2003@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "l1sanya/my-core": "dev-main"
+    }
+}

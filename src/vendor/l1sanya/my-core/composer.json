@@ -1,0 +1,17 @@
+{
+  "name": "l1sanya/my-core",
+  "description": "My first package",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "l1sanya\\MyCore\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Alex",
+      "email": "lisanya2702@gmail.com"
+    }
+  ],
+  "require": {}
+}
